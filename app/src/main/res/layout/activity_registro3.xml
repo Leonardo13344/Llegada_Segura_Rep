@@ -8,7 +8,7 @@
     tools:context=".registro.Registro2">
 
     <EditText
-        android:id="@+id/editTextPhone2"
+        android:id="@+id/editTextApellido"
         style="@style/texto"
         android:layout_width="215dp"
         android:layout_height="53dp"
@@ -55,12 +55,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNombre"
         app:layout_constraintVertical_bias="0.344
 " />
 
     <EditText
-        android:id="@+id/editTextPhone"
+        android:id="@+id/editTextNombre"
         style="@style/texto"
         android:layout_width="215dp"
         android:layout_height="53dp"
