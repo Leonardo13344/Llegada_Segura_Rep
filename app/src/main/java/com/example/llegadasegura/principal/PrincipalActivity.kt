@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.ActivityPrincipalBinding
+import com.example.llegadasegura.principal.fragments.ConfigurationFragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -23,6 +24,8 @@ class PrincipalActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnM
     private lateinit var binding: ActivityPrincipalBinding
 
     private lateinit var map: GoogleMap
+
+
 
     companion object {
         const val REQUEST_CODE_LOCATION = 0
@@ -41,7 +44,12 @@ class PrincipalActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnM
     }
 
     private fun config(){
-        
+        val configFragment = ConfigurationFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.setCustomAnimations(R.anim.slide_in,R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
+        transaction.replace(R.id.contenedorFragment, configFragment);
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     private fun createFragment() {
