@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
 class PrincipalActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
-    //private lateinit var binding: ActivityPrincipalBinding
+    private lateinit var binding: ActivityPrincipalBinding
 
     private lateinit var map: GoogleMap
 
@@ -30,9 +30,18 @@ class PrincipalActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //binding = ActivityPrincipalBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_principal)
+        binding = ActivityPrincipalBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         createFragment()
+
+        binding.btnConfig.setOnClickListener {
+            config()
+        }
+
+    }
+
+    private fun config(){
+        
     }
 
     private fun createFragment() {

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">LLegada Segura</string>
     <string name="main_desc">Localización en tiempo real con tus familiares mas cercanos, cuando quieras y donde quieras</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
