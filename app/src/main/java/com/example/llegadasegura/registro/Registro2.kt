@@ -23,7 +23,7 @@ class Registro2 : AppCompatActivity() {
         }
 
         val respuesta = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            if(it.resultCode == RESULT_OK && binding.editTextNumero.getText().toString().isNotEmpty()){
+            if(it.resultCode == RESULT_OK && binding.editTextNumero.text.toString().isNotEmpty()){
                 //val message = it.data?.getStringExtra("val")
                 binding.checkBox.setChecked(true)
                 binding.btnContinuar.setEnabled(true)

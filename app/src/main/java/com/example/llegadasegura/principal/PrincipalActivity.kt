@@ -22,10 +22,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 
 class PrincipalActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
     private lateinit var binding: ActivityPrincipalBinding
-
     private lateinit var map: GoogleMap
-
-
 
     companion object {
         const val REQUEST_CODE_LOCATION = 0

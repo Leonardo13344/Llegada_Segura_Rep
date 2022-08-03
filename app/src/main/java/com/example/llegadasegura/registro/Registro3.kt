@@ -3,6 +3,7 @@ package com.example.llegadasegura.registro
 import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.llegadasegura.databinding.ActivityRegistro3Binding
 
@@ -19,33 +20,29 @@ class Registro3: AppCompatActivity() {
         val bundle= intent.extras
         val numero = bundle?.getString("numero")
 
-
         binding.btnContinuar.setOnClickListener{
+            if(validaNombreApellido()){
+                cambiarPantallaRegistro4(numero.toString().trim(),nombre.text.toString().trim(),apellido.text.toString().trim())
+            }else{
+                Toast.makeText(this,"Ingrese su nombre y apellido",Toast.LENGTH_LONG).show()
+            }
 
-            cambiarPantallaRegistro4(numero.toString(),nombre.text.toString(),apellido.text.toString())
         }
 
-        binding.editTextApellido.setOnClickListener{
-            validar()
-        }
     }
 
 
     private fun cambiarPantallaRegistro4(numero:String, nombre:String, apellido:String) {
-        var intent = Intent(this, Registro4::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        val intent = Intent(this, Registro4::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra("numero", numero)
         intent.putExtra("nombre", nombre)
         intent.putExtra("apellido", apellido)
         startActivity(intent)
     }
 
-    private fun validar(){
-        if(binding.editTextNombre.getText().toString().isNotEmpty() && binding.editTextApellido.getText().toString().isNotEmpty()){
-            binding.btnContinuar.setEnabled(true)
-        }else{
-            binding.btnContinuar.setEnabled(false)
-        }
+    private fun validaNombreApellido():Boolean{
+        return(binding.editTextNombre.text.toString().isNotEmpty() && binding.editTextApellido.text.toString().isNotEmpty())
     }
 }
