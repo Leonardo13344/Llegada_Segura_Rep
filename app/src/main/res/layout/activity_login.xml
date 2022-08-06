@@ -25,7 +25,7 @@
         style="@style/texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Ingresa tu número para entrar"
+        android:text="Ingresa tu correo para entrar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,13 +33,13 @@
         app:layout_constraintVertical_bias="0.026" />
 
     <EditText
-        android:id="@+id/editTextPhone3"
+        android:id="@+id/editTextCorreo"
         style="@style/texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Ingresar número"
-        android:inputType="phone"
+        android:hint="Ingresa tu correo"
+        android:inputType="textWebEmailAddress"
         android:minHeight="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,6 +58,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPhone3"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCorreo"
         app:layout_constraintVertical_bias="0.259" />
 </androidx.constraintlayout.widget.ConstraintLayout>

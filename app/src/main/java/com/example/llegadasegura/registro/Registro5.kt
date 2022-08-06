@@ -56,9 +56,9 @@ class Registro5: AppCompatActivity() {
             "telefono" to user.numero,
             ))
         db.collection("users").document(user.correo).collection("Grupos")
-            .document("1").set(Grupo())
+            .document().set(Grupo())
         db.collection("users").document(user.correo).collection("Direcciones")
-            .document("1").set(Direccion())
+            .document().set(Direccion())
 
     }
     private fun crearUsuario(correo:String, numero:String, nombre:String, apellido:String):usuario{

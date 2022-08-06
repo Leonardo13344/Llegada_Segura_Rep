@@ -19,7 +19,7 @@ class Registro2 : AppCompatActivity() {
         setContentView(binding.root)
         numero =binding.editTextNumero
         binding.btnContinuar.setOnClickListener{
-            cambiarPantallaRegistro3(this.numero.text.toString())
+            cambiarPantallaRegistro3(this.numero.text.toString().trim())
         }
 
         val respuesta = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){

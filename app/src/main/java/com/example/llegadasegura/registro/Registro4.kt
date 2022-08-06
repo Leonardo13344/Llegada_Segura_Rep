@@ -14,7 +14,7 @@ class Registro4: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityRegistro4Binding.inflate(layoutInflater)
         correo = binding.editTextCorreo
-        contrasenia = binding.editTextCorreo
+        contrasenia = binding.editTextContrasenia
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val bundle= intent.extras
@@ -23,7 +23,7 @@ class Registro4: AppCompatActivity() {
         val apellido = bundle?.getString("apellido")
         binding.btnContinuar.setOnClickListener{
             if (validarContrasenia(contrasenia.text.toString())){
-                cambiarPantallaRegistro4(numero.toString(),nombre.toString(),apellido.toString(),correo.text.toString(), contrasenia.text.toString())
+                cambiarPantallaRegistro4(numero.toString(),nombre.toString(),apellido.toString(),correo.text.toString().trim(), contrasenia.text.toString().trim())
             }else{
                 Toast.makeText(this,"La contraseña tiene que ser +8 Caracteres", Toast.LENGTH_LONG).show()
             }
