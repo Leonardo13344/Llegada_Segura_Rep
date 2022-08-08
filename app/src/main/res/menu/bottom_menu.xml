@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/nav_mapa"
+        android:title="Mapa"
+        android:icon="@drawable/ic_baseline_location_on_24"/>
+
+    <item android:id="@+id/nav_dirs"
+        android:title="Direcciones"
+        android:icon="@drawable/ic_baseline_directions_24"/>
+
+    <item android:id="@+id/nav_grupos"
+        android:title="Grupos"
+        android:icon="@drawable/ic_baseline_group_24"/>
+
+    <item android:id="@+id/nav_settings"
+        android:title="Configuración"
+        android:icon="@drawable/ic_baseline_settings_24"/>
+
+</menu>

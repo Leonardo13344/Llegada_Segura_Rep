@@ -1,15 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/gunmetal"
+    android:orientation="vertical"
     tools:context=".principal.fragments.ConfigurationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/black"
-        android:text="@string/hello_blank_fragment" />
+    <Button
+        android:id="@+id/btnSoporte"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="302dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/concert_one"
+        android:gravity="left|center"
+        android:text="Soporte"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ic_cuenta"
+        app:layout_constraintTop_toBottomOf="@+id/btnPoliticas" />
 
-</FrameLayout>
+    <ImageView
+        android:id="@+id/ic_soporte"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_help"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ic_policy" />
+
+    <Button
+        android:id="@+id/btnPoliticas"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="302dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/concert_one"
+        android:gravity="left|center"
+        android:text="Politicas y Privacidad"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ic_cuenta"
+        app:layout_constraintTop_toBottomOf="@+id/btnPayment" />
+
+    <ImageView
+        android:id="@+id/ic_membresia"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_pagos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ic_cuenta" />
+
+    <ImageView
+        android:id="@+id/ic_cuenta"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_user"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnCuenta"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="302dp"
+        android:layout_height="70dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/concert_one"
+        android:gravity="left|center"
+        android:text="Cuenta"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ic_cuenta"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ic_policy"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_policy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ic_membresia" />
+
+    <Button
+        android:id="@+id/btnPayment"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="302dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/concert_one"
+        android:gravity="left|center"
+        android:text="Versión Premium"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ic_cuenta"
+        app:layout_constraintTop_toBottomOf="@+id/btnCuenta" />
+
+    <ImageView
+        android:id="@+id/ic_cerrar"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_cerrar_sesion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.041"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ic_soporte" />
+
+    <Button
+        android:id="@+id/btnCerrar"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="302dp"
+        android:layout_height="71dp"
+    android:textColor="@color/white"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/concert_one"
+        android:gravity="left|center"
+        android:text="Cerrar Sesión"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/ic_cerrar"
+        app:layout_constraintTop_toBottomOf="@+id/btnSoporte" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
