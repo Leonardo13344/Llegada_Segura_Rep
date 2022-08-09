@@ -4,26 +4,40 @@
     android:layout_height="150dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
+    android:background="@color/gunmetal"
     >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/nombreGrupo"
+            style="@style/texto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Texto1"/>
+            android:layout_marginBottom="4sp"
+            android:fontFamily="@font/concert_one"
+            android:textSize="40sp"
+            tools:text="Nombre" />
+
         <TextView
             android:id="@+id/rolGrupo"
+            style="@style/texto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="SegundoTexto"/>
+            android:layout_marginBottom="4sp"
+            android:fontFamily="@font/concert_one"
+            tools:text="Rol" />
+
         <TextView
             android:id="@+id/descripcionGrupo"
+            style="@style/texto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="TextoPrueba"/>
+            android:layout_marginBottom="4sp"
+            android:fontFamily="@font/concert_one"
+            tools:text="Desc" />
 
     </LinearLayout>
 

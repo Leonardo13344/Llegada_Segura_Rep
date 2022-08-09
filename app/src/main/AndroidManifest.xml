@@ -40,7 +40,9 @@
 
         <activity
             android:name=".principal.PrincipalActivity"
-            android:exported="false" />
+            android:exported="false">
+
+        </activity>
         <activity
             android:name=".login.Login2Activity"
             android:exported="false" />

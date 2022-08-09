@@ -52,6 +52,7 @@
         <entry key="..\:/Users/fing.labcom/AndroidStudioProjects/Llegada_Segura_Montero_Suniga_Repositorio/app/src/main/res/layout/activity_principal.xml" value="0.1" />
         <entry key="..\:/Users/fing.labcom/AndroidStudioProjects/Llegada_Segura_Montero_Suniga_Repositorio/app/src/main/res/layout/activity_registro2.xml" value="0.25" />
         <entry key="..\:/Users/fing.labcom/AndroidStudioProjects/Llegada_Segura_Montero_Suniga_Repositorio/app/src/main/res/layout/activity_registro3.xml" value="0.1723684210526316" />
+        <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/activity_grupos.xml" value="0.1" />
         <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/activity_grupos_create.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/activity_grupos_join.xml" value="0.22" />
         <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/activity_login2.xml" value="0.27291666666666664" />
@@ -59,6 +60,9 @@
         <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/activity_registro4.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/activity_registro5.xml" value="0.25" />
         <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/activity_terminos_result.xml" value="0.25" />
+        <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/fragment_configuration.xml" value="0.20199275362318841" />
+        <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/fragment_groups.xml" value="0.1" />
+        <entry key="..\:/Users/fing.labcom/Desktop/Llegada_Segura_Rep/app/src/main/res/layout/item_grupo.xml" value="0.33" />
       </map>
     </option>
   </component>

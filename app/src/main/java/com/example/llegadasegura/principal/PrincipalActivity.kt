@@ -1,36 +1,22 @@
 package com.example.llegadasegura.principal
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.location.Location
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.ActivityPrincipalBinding
-import com.example.llegadasegura.grupo.Grupos
 import com.example.llegadasegura.principal.fragments.ConfigurationFragment
 import com.example.llegadasegura.principal.fragments.DirectionsFragment
 import com.example.llegadasegura.principal.fragments.GroupsFragment
 import com.example.llegadasegura.principal.fragments.MapaFragment
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class PrincipalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPrincipalBinding
-    private lateinit var map: GoogleMap
+
 
 
     companion object {
@@ -89,20 +75,13 @@ class PrincipalActivity : AppCompatActivity() {
         }
     }
 
-    private fun irGrupos(){
+   /* private fun irGrupos(){
         val intent = Intent(this, Grupos::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)
-    }
-    /*private fun config(){
-        val configFragment = ConfigurationFragment()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.setCustomAnimations(R.anim.slide_in,R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
-        transaction.replace(R.id.contenedorFragment, configFragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
     }*/
+
 
 
 }
