@@ -32,11 +32,10 @@ class GroupsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentGroupsBinding.inflate(layoutInflater)
+        binding = FragmentGroupsBinding.inflate(layoutInflater, container,false)
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_groups, container, false)
-        initRecycler(view)
-        return view
+        initRecycler(binding.root)
+        return binding.root
     }
 
     private fun initRecycler(itemView: View){

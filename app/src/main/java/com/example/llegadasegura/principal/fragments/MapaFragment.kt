@@ -13,19 +13,22 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.llegadasegura.R
+import com.example.llegadasegura.databinding.FragmentMapaBinding
 import com.example.llegadasegura.principal.PrincipalActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 
 
-class MapaFragment : Fragment(R.layout.fragment_mapa), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
+class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
     // TODO: Rename and change types of parameters
 
     private lateinit var map: GoogleMap
+    private lateinit var binding: FragmentMapaBinding
+    private lateinit var principal : PrincipalActivity
+    private lateinit var grupos : GroupsFragment
 
 
 
@@ -33,14 +36,19 @@ class MapaFragment : Fragment(R.layout.fragment_mapa), OnMapReadyCallback, Googl
         const val REQUEST_CODE_LOCATION = 0
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Initialize view
-        val view = inflater.inflate(R.layout.fragment_mapa, container, false)
+        binding = FragmentMapaBinding.inflate(layoutInflater, container, false)
         createFragment()
-        return view
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun createFragment(){
@@ -50,16 +58,17 @@ class MapaFragment : Fragment(R.layout.fragment_mapa), OnMapReadyCallback, Googl
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-        createMarker()
+        animateCamera()
         enableLocation()
         map.setOnMyLocationButtonClickListener(this)
         map.setOnMyLocationClickListener(this)
     }
 
-    private fun createMarker(){
+
+    private fun animateCamera(){
         val coordinates = LatLng(-0.1438661237117817, -78.45302369572558)
-        val marker = MarkerOptions().position(coordinates).title("Quito - Ecuador")
-        map.addMarker(marker)
+        //val marker = MarkerOptions().position(coordinates).title("Quito - Ecuador")
+        //map.addMarker(marker)
         map.animateCamera(
             CameraUpdateFactory.newLatLngZoom(coordinates, 10f),
             4000,
@@ -82,12 +91,12 @@ class MapaFragment : Fragment(R.layout.fragment_mapa), OnMapReadyCallback, Googl
         }
     }
 
-    private fun requestLocationPermission() {
+    private fun requestLocationPermission(){
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
-        ) {
+        ){
             Toast.makeText(requireContext(), "Ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(
