@@ -30,7 +30,7 @@ class grupos_join : AppCompatActivity() {
     }
 
     private fun buscarGrupo(identificador:String, rol:String, correo:String ){
-        Log.d("IngresaS", "Ingresa a los datos " + identificador +" "+ rol+ " "+ correo)
+        Log.d("IngresaS", "Ingresa a los datos s " + identificador +" "+ rol+ " "+ correo)
         val grupoDatos =db.collection("grupos").document(identificador).get()
         grupoDatos.addOnSuccessListener { documento ->
             val nombre2 = documento.data?.get("Nombre").toString()
