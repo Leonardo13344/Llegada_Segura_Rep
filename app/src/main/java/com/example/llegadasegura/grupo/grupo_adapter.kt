@@ -10,13 +10,19 @@ import com.example.llegadasegura.databinding.ItemGrupoBinding
 class grupo_adapter(
     val grupo: List<Grupo>):
     RecyclerView.Adapter<grupo_adapter.GrupoHolder>() {
-    inner class GrupoHolder(private val item:View):RecyclerView.ViewHolder(item)  {
+    inner class GrupoHolder(item:View):RecyclerView.ViewHolder(item)  {
         private var binding: ItemGrupoBinding = ItemGrupoBinding.bind(item)
-
         fun render(grupo:Grupo){
             binding.nombreGrupo.text = grupo.nombre
-            binding.descripcionGrupo.text = grupo.id
+            binding.descripcionGrupo.text = grupo.tipo
             binding.rolGrupo.text = grupo.rol
+            if (grupo.tipo=="Familia"){
+                binding.imagenGrupo.setImageResource(R.drawable.ic_familia)
+            }else if (grupo.tipo =="Amigos"){
+                binding.imagenGrupo.setImageResource(R.drawable.ic_amigos)
+            }else if(grupo.tipo =="Trabajo"){
+                binding.imagenGrupo.setImageResource(R.drawable.ic_trabajo)
+            }
         }
     }
 

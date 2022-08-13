@@ -1,5 +1,7 @@
 package com.example.llegadasegura.principal.fragments
 
+
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,40 +13,45 @@ import com.example.llegadasegura.Clases.Grupo
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentGroupsBinding
 import com.example.llegadasegura.grupo.grupo_adapter
+import com.example.llegadasegura.grupo.grupos_create
 
 
 class GroupsFragment : Fragment() {
 
     private lateinit var binding: FragmentGroupsBinding
 
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<grupo_adapter.GrupoHolder>? = null
-
-    private var grupos : List<Grupo> = listOf(
-        Grupo("01","Padre","Familia"),
-        Grupo("02","Madre","Familia"),
-        Grupo("03","Hermano","Familia"),
-        Grupo("04","Amigo","Amigos"),
-
-        )
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         binding = FragmentGroupsBinding.inflate(layoutInflater, container,false)
+        val args = arguments
+        var myList :ArrayList<Grupo> = args?.getParcelableArrayList<Grupo>("list") as ArrayList<Grupo>
+        var correo: String? = args.getString("correo");
         // Inflate the layout for this fragment
-        initRecycler(binding.root)
+
+
+        initRecycler(binding.root, myList)
+        binding.nuevoGrupoBoton.setOnClickListener{
+            nextScreen(correo.toString())
+        }
         return binding.root
     }
 
-    private fun initRecycler(itemView: View){
+    private fun initRecycler(itemView: View, myList: ArrayList<Grupo>){
         val recyclerView = itemView.findViewById(R.id.recycler_view) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        val adapter = grupo_adapter(grupos)
+        val adapter = grupo_adapter(myList)
         recyclerView.adapter = adapter
     }
-
+    private fun nextScreen(correo:String){
+        activity?.let{
+            val intent = Intent (it, grupos_create::class.java)
+            intent.putExtra("correo",correo)
+            it.startActivity(intent)
+        }
+    }
 
     }
 
