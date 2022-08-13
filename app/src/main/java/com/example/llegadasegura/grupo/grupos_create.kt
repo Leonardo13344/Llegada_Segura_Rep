@@ -72,6 +72,7 @@ class grupos_create : AppCompatActivity() {
             hashMapOf("Nombre" to grupo.nombre,
             "IdGrupo" to id,
             "CorreoCreador" to correo,
+            "Tipo" to tipo,
             )
         )
         //Toast.makeText(this,"IngresaAlMetodoGuardar",Toast.LENGTH_LONG).show()

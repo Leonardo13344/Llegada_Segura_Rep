@@ -21,30 +21,30 @@
         app:layout_constraintVertical_bias="0.272" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName3"
+        android:id="@+id/editTextRol"
         style="@style/texto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="180dp"
+        android:layout_height="51dp"
         android:ems="10"
+        android:hint="Rol"
         android:inputType="textPersonName"
         android:text=""
-        android:hint="Rol"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.169" />
+        app:layout_constraintVertical_bias="0.172" />
 
     <EditText
-        android:id="@+id/editTextTextPersonName4"
+        android:id="@+id/editTextCodigo"
         style="@style/texto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="54dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text=""
         android:hint="Código"
+        android:inputType="number"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -66,7 +66,7 @@
         app:layout_constraintVertical_bias="0.099" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/BotonContinuar"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:background="@drawable/boton_redondo"

@@ -14,6 +14,7 @@ import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentGroupsBinding
 import com.example.llegadasegura.grupo.grupo_adapter
 import com.example.llegadasegura.grupo.grupos_create
+import com.example.llegadasegura.grupo.grupos_join
 
 
 class GroupsFragment : Fragment() {
@@ -27,14 +28,17 @@ class GroupsFragment : Fragment() {
 
         binding = FragmentGroupsBinding.inflate(layoutInflater, container,false)
         val args = arguments
-        var myList :ArrayList<Grupo> = args?.getParcelableArrayList<Grupo>("list") as ArrayList<Grupo>
-        var correo: String? = args.getString("correo");
+        val myList :ArrayList<Grupo> = args?.getParcelableArrayList<Grupo>("list") as ArrayList<Grupo>
+        var correo: String? = args.getString("correo")
         // Inflate the layout for this fragment
 
 
         initRecycler(binding.root, myList)
         binding.nuevoGrupoBoton.setOnClickListener{
             nextScreen(correo.toString())
+        }
+        binding.BtnUnirseGrupo.setOnClickListener {
+            nextScreenUnirse(correo.toString())
         }
         return binding.root
     }
@@ -48,6 +52,13 @@ class GroupsFragment : Fragment() {
     private fun nextScreen(correo:String){
         activity?.let{
             val intent = Intent (it, grupos_create::class.java)
+            intent.putExtra("correo",correo)
+            it.startActivity(intent)
+        }
+    }
+    private fun nextScreenUnirse(correo:String){
+        activity?.let{
+            val intent = Intent (it, grupos_join::class.java)
             intent.putExtra("correo",correo)
             it.startActivity(intent)
         }
