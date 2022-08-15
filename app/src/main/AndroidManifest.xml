@@ -27,11 +27,9 @@
             android:exported="false" >
 
         </activity>
+
         <activity
-            android:name=".grupo.Grupos"
-            android:exported="false" />
-        <activity
-            android:name=".TerminosResultActivity"
+            android:name=".utils.TerminosResultActivity"
             android:exported="false" />
 
         <meta-data

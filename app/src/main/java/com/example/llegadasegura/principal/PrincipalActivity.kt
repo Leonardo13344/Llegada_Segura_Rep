@@ -54,8 +54,6 @@ class PrincipalActivity : AppCompatActivity() {
         val directionsFragment = DirectionsFragment()
         val gruposFragment = GroupsFragment()
 
-
-
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_mapa -> {
@@ -76,7 +74,6 @@ class PrincipalActivity : AppCompatActivity() {
                 }
                 else -> false
             }
-
         }
     }
 
@@ -98,17 +95,10 @@ class PrincipalActivity : AppCompatActivity() {
             fragment.arguments = args
             replace(R.id.cointainerView, fragment)
             commit()
-
         }
     }
 }
 
-   /* private fun irGrupos(){
-        val intent = Intent(this, Grupos::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-    }*/
 
 
 

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.llegadasegura.TerminosResultActivity
+import com.example.llegadasegura.utils.TerminosResultActivity
 import com.example.llegadasegura.databinding.ActivityRegistro2Binding
 
 
@@ -36,7 +36,7 @@ class Registro2 : AppCompatActivity() {
         }
 
         binding.btnTerminos.setOnClickListener{
-            respuesta.launch(Intent(this,TerminosResultActivity::class.java))
+            respuesta.launch(Intent(this, TerminosResultActivity::class.java))
 
         }
 

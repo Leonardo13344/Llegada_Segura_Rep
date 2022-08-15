@@ -55,6 +55,7 @@ class grupos_create : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.putExtra("correo", correo)
+        Toast.makeText(this, "Grupo Creado ", Toast.LENGTH_SHORT).show()
         startActivity(intent)
     }
     private fun registrarDatosD(correo: String, grupo: Grupo, id:String) {

@@ -1,9 +1,8 @@
-package com.example.llegadasegura
+package com.example.llegadasegura.utils
 
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
 import com.example.llegadasegura.databinding.ActivityTerminosResultBinding
 
 
