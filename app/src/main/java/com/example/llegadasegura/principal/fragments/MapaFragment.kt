@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,16 @@ import androidx.core.content.ContextCompat
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentMapaBinding
 import com.example.llegadasegura.principal.PrincipalActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
@@ -29,6 +35,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var binding: FragmentMapaBinding
     private lateinit var principal : PrincipalActivity
     private lateinit var grupos : GroupsFragment
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var db: DatabaseReference
 
 
 
@@ -44,7 +52,41 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         // Initialize view
         binding = FragmentMapaBinding.inflate(layoutInflater, container, false)
         createFragment()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        db = FirebaseDatabase.getInstance().reference
+        lastKnownLocation()
         return binding.root
+    }
+
+
+    private fun lastKnownLocation(){
+        if (ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                // Got last known location. In some rare situations this can be null.
+                Log.e("Location", "Longitud: " + location?.longitude + "Latitud: " + location?.latitude)
+                val latLang: HashMap<String, String> = HashMap<String, String>()
+                latLang["Longitud"] = location!!.longitude.toString()
+                latLang["Latitud"] = location!!.latitude.toString()
+                db.child("usuarios").push().setValue(latLang)
+
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
