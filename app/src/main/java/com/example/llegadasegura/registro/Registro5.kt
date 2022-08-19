@@ -34,11 +34,14 @@ class Registro5: AppCompatActivity() {
         val apellido = bundle?.getString("apellido")
         val correo = bundle?.getString("correo")
         val contrasenia = bundle?.getString("contrasenia")
-
+        registrarUsuario(correo.toString(), contrasenia.toString())
+        registrarDatosD(crearUsuario(correo.toString(),numero.toString(), nombre.toString(), apellido.toString()))
         binding.btnContinuar.setOnClickListener {
             cambiarPantallaInicio()
-            registrarUsuario(correo.toString(), contrasenia.toString())
-            registrarDatosD(crearUsuario(correo.toString(),numero.toString(), nombre.toString(), apellido.toString()))
+        }
+
+        binding.botonReenviarCV.setOnClickListener{
+            enviarCorreoVerificacion();
         }
     }
 
@@ -71,9 +74,17 @@ class Registro5: AppCompatActivity() {
             if (task.isSuccessful) {
                 Toast.makeText(this,"Se registro correctamente", Toast.LENGTH_LONG).show()
                 this.firebaseUser = this.auth.currentUser!!
+                firebaseUser.sendEmailVerification()
             } else {
                 Toast.makeText(this,"No se pudo registrar USER ", Toast.LENGTH_LONG).show()
+                binding.btnContinuar.text = "Regresar"
+                binding.botonReenviarCV.isEnabled = false
+                binding.textView5.isEnabled = false
+                binding.textView.text ="No se pudo registrar su correo electrónico"
             }
         }
+    }
+    private fun enviarCorreoVerificacion(){
+        firebaseUser.sendEmailVerification();
     }
 }

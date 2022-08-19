@@ -62,10 +62,10 @@ class Login2Activity : AppCompatActivity() {
     }
     private fun updateUI(account: FirebaseUser?) {
         if (account != null) {
-            Toast.makeText(this, "You Signed In successfully", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "¡Log in exitoso!", Toast.LENGTH_LONG).show()
             cambiarActividadPrincipal(account.email.toString())
         } else {
-            Toast.makeText(this, "You Didnt signed in", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "¡Log in fallido!", Toast.LENGTH_LONG).show()
         }
     }
     private fun cambiarActividadPrincipal(correo:String) {
