@@ -2,6 +2,7 @@ package com.example.llegadasegura.principal.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -23,8 +24,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.ktx.Firebase
 
 
@@ -53,7 +53,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         binding = FragmentMapaBinding.inflate(layoutInflater, container, false)
         createFragment()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
-        db = FirebaseDatabase.getInstance().reference
+        db = FirebaseDatabase.getInstance().getReference("usuarios")
         lastKnownLocation()
         return binding.root
     }
@@ -81,12 +81,60 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             .addOnSuccessListener { location : Location? ->
                 // Got last known location. In some rare situations this can be null.
                 Log.e("Location", "Longitud: " + location?.longitude + "Latitud: " + location?.latitude)
-                val latLang: HashMap<String, String> = HashMap<String, String>()
-                latLang["Longitud"] = location!!.longitude.toString()
-                latLang["Latitud"] = location!!.latitude.toString()
-                db.child("usuarios").push().setValue(latLang)
+                //val latLang: HashMap<String, String> = HashMap<String, String>()
+                //latLang["Longitud"] = location!!.longitude.toString()
+                //latLang["Latitud"] = location!!.latitude.toString()
+                //Log.e("Location",getMail())
+                Log.e("Location",db.child(getMail()).key.toString())
+                //db.child("usuarios").child(getMail()).push().setValue(latLang)
+                /*if(db.child(getMail()).key != null){
+                    Log.e("Location", "test update")
+                    //updateCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
+                }else{
+                    Log.e("Location", "test insert")
+                    //insertCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
+                }*/
+                db.child(getMail()).addListenerForSingleValueEvent(object: ValueEventListener{
+
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        if(snapshot.exists()){
+                            Log.e("Location", "test update")
+                            updateCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
+                        }else{
+                            Log.e("Location", "test insert")
+                            insertCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                        throw error.toException()
+                    }
+                })
 
             }
+    }
+
+    private fun insertCoor(mail:String, lat:String, lang:String){
+        val latLang: HashMap<String, String> = HashMap<String, String>()
+        latLang["Longitud"] = lang
+        latLang["Lotitud"] = lat
+        db.child(mail).setValue(latLang).addOnCompleteListener(){
+            Log.e("Location", "Insert Correcto")
+        }
+    }
+
+    private fun updateCoor(mail:String, lat:String, lang:String){
+        val latLang: HashMap<String, String> = HashMap<String, String>()
+        latLang["Longitud"] = lang
+        latLang["Lotitud"] = lat
+        db.child(mail).updateChildren(latLang as Map<String, String>).addOnCompleteListener(){
+            Log.e("Location", "Update Correcto")
+        }
+
+    }
+
+    private fun getMail(): String{
+        val prefs = this.requireActivity().getSharedPreferences("loginData", Context.MODE_PRIVATE)
+        return prefs.getString("email", null).toString().replace(".","!")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
