@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.llegadasegura.Clases.MapCoor
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentMapaBinding
 import com.example.llegadasegura.principal.PrincipalActivity
@@ -25,7 +27,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.*
-import com.google.firebase.ktx.Firebase
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
@@ -37,6 +38,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var grupos : GroupsFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var db: DatabaseReference
+    private lateinit var mapCoor: MapCoor
+    private var isHere = false
 
 
 
@@ -55,6 +58,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         db = FirebaseDatabase.getInstance().getReference("usuarios")
         lastKnownLocation()
+        //updateCoordEveryHalfMinute()
         return binding.root
     }
 
@@ -81,25 +85,15 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             .addOnSuccessListener { location : Location? ->
                 // Got last known location. In some rare situations this can be null.
                 Log.e("Location", "Longitud: " + location?.longitude + "Latitud: " + location?.latitude)
-                //val latLang: HashMap<String, String> = HashMap<String, String>()
-                //latLang["Longitud"] = location!!.longitude.toString()
-                //latLang["Latitud"] = location!!.latitude.toString()
-                //Log.e("Location",getMail())
                 Log.e("Location",db.child(getMail()).key.toString())
-                //db.child("usuarios").child(getMail()).push().setValue(latLang)
-                /*if(db.child(getMail()).key != null){
-                    Log.e("Location", "test update")
-                    //updateCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
-                }else{
-                    Log.e("Location", "test insert")
-                    //insertCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
-                }*/
+                mapCoor = MapCoor(location?.latitude!!.toDouble(), location?.longitude!!.toDouble(), getMail())
                 db.child(getMail()).addListenerForSingleValueEvent(object: ValueEventListener{
-
                     override fun onDataChange(snapshot: DataSnapshot) {
                         if(snapshot.exists()){
                             Log.e("Location", "test update")
                             updateCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
+                            updateCoordEveryHalfMinute()
+
                         }else{
                             Log.e("Location", "test insert")
                             insertCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
@@ -116,7 +110,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private fun insertCoor(mail:String, lat:String, lang:String){
         val latLang: HashMap<String, String> = HashMap<String, String>()
         latLang["Longitud"] = lang
-        latLang["Lotitud"] = lat
+        latLang["Latitud"] = lat
         db.child(mail).setValue(latLang).addOnCompleteListener(){
             Log.e("Location", "Insert Correcto")
         }
@@ -125,11 +119,29 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private fun updateCoor(mail:String, lat:String, lang:String){
         val latLang: HashMap<String, String> = HashMap<String, String>()
         latLang["Longitud"] = lang
-        latLang["Lotitud"] = lat
+        latLang["Latitud"] = lat
         db.child(mail).updateChildren(latLang as Map<String, String>).addOnCompleteListener(){
             Log.e("Location", "Update Correcto")
         }
 
+    }
+
+    private fun updateCoordEveryHalfMinute(){
+        object : CountDownTimer(10000, 1000) {
+
+            override fun onTick(millisUntilFinished: Long) {
+                Log.e("LocationCount", "T: " + millisUntilFinished / 1000)
+            }
+
+            override fun onFinish() {
+                Log.e("LocationCount", "Salida Count Down")
+                lastKnownLocation()
+            }
+        }.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     private fun getMail(): String{
