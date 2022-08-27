@@ -23,26 +23,33 @@ class Login2Activity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLogin2Binding.inflate(layoutInflater)
-        val bundle= intent.extras
+        val bundle = intent.extras
         val correo = bundle?.getString("correo")
         val contrasenia = binding.editTextTextPassword
         auth = Firebase.auth
         setContentView(binding.root)
 
-        binding.btnContinuar.setOnClickListener{
-            validarUsuario(correo.toString(),
-                contrasenia.text.toString())
+        binding.btnContinuar.setOnClickListener {
+            validarUsuario(
+                correo.toString(),
+                contrasenia.text.toString()
+            )
+        }
+        binding.btnRecuperarC.setOnClickListener{
+            recuperarContraseña(correo.toString());
         }
     }
+
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
-        if(currentUser == null){
+        if (currentUser == null) {
             Toast.makeText(this, "El usuario es nulo", Toast.LENGTH_LONG).show()
         }
     }
-    private fun validarUsuario(email:String, password:String){
-        Log.d("usuario", email +  password)
+
+    private fun validarUsuario(email: String, password: String) {
+        Log.d("usuario", email + password)
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
@@ -53,13 +60,16 @@ class Login2Activity : AppCompatActivity() {
 
                 } else {
                     Log.w("TAG", "signInWithEmail:failure", task.exception)
-                    Toast.makeText(baseContext, "Fallo el ingreso",
-                        Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        baseContext, "Fallo el ingreso",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     updateUI(null)
                 }
             }
     }
+
     private fun updateUI(account: FirebaseUser?) {
         if (account != null) {
             Toast.makeText(this, "¡Log in exitoso!", Toast.LENGTH_LONG).show()
@@ -68,6 +78,12 @@ class Login2Activity : AppCompatActivity() {
             Toast.makeText(this, "¡Log in fallido!", Toast.LENGTH_LONG).show()
         }
     }
+
+    private fun recuperarContraseña(correo:String){
+
+
+    }
+
     private fun cambiarActividadPrincipal(correo:String) {
         val prefs = getSharedPreferences("loginData", Context.MODE_PRIVATE).edit()
         prefs.putString("email", correo)
@@ -78,6 +94,7 @@ class Login2Activity : AppCompatActivity() {
         intent.putExtra("correo", correo)
         startActivity(intent)
     }
+
 
 
 
