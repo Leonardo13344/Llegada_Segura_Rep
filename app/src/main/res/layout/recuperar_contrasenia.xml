@@ -9,7 +9,6 @@
 
     <Button
         android:id="@+id/btnRecuperarContrasenia"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="428dp"
@@ -49,13 +48,14 @@
 
     <EditText
         android:id="@+id/editTextCorreoR"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/texto"
+        android:layout_width="295dp"
+        android:layout_height="43dp"
         android:layout_marginTop="24dp"
         android:ems="15"
+        android:hint="Correo Electrónico"
         android:inputType="textWebEmailAddress"
         android:text=""
-        android:hint="Correo Electrónico"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

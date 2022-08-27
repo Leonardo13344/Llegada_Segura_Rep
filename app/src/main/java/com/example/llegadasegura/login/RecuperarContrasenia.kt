@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.llegadasegura.databinding.RecuperarContraseniaBinding
 import com.example.llegadasegura.registro.MainActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class RecuperarContrasenia : AppCompatActivity() {
         private lateinit var binding: RecuperarContraseniaBinding
@@ -16,8 +18,8 @@ class RecuperarContrasenia : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d("Entr","Esta entrando a la clase")
         super.onCreate(savedInstanceState)
+        auth = Firebase.auth
         binding = RecuperarContraseniaBinding.inflate(layoutInflater)
-
         binding.btnRecuperarContrasenia.setOnClickListener{
             enviarCorreoRecuperacion(binding.editTextCorreoR.text.toString())
         }
@@ -35,7 +37,7 @@ class RecuperarContrasenia : AppCompatActivity() {
             auth.setLanguageCode("es")
         auth.sendPasswordResetEmail(correo).addOnCompleteListener {task ->
             if (task.isSuccessful) {
-                Toast.makeText(this, "Revise su correo", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Se envió un correo para restabblecer la contraseña", Toast.LENGTH_LONG).show()
                 volverAInicio()
             } else {
                 Toast.makeText(this, "No se pudo enviar el correo", Toast.LENGTH_LONG).show()

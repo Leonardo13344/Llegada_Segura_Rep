@@ -31,6 +31,12 @@
         <activity
             android:name=".utils.TerminosResultActivity"
             android:exported="false" />
+        <activity
+            android:name=".utils.TerminosResultActivityInfo"
+            android:exported="false" />
+        <activity
+            android:name=".utils.Cuenta"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

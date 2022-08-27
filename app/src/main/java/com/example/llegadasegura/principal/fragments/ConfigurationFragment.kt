@@ -6,28 +6,46 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentConfigurationBinding
 import com.example.llegadasegura.principal.PrincipalActivity
 import com.example.llegadasegura.registro.MainActivity
+import com.example.llegadasegura.utils.Cuenta
+import com.example.llegadasegura.utils.TerminosResultActivityInfo
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 class ConfigurationFragment : Fragment() {
 
     private lateinit var binding: FragmentConfigurationBinding
+    private lateinit var nombre:String
+    private lateinit var apellido:String
+    private lateinit var telefono:String
+    val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentConfigurationBinding.inflate(layoutInflater, container, false)
+        //Se llenan los datos
+        llenarDatos()
         binding.btnCerrar.setOnClickListener{
             showAlert()
+        }
+        binding.btnPoliticas.setOnClickListener{
+            irTerminos()
+        }
+        binding.btnCuenta.setOnClickListener{
+            irCuenta(nombre, apellido, telefono)
         }
         return binding.root
     }
@@ -52,6 +70,42 @@ class ConfigurationFragment : Fragment() {
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
+    private fun irTerminos(){
+        val intent = Intent(requireContext(), TerminosResultActivityInfo::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
 
+    private fun llenarDatos() {
+        val usuario = FirebaseAuth.getInstance().currentUser?.email.toString()
+        nombre = ""
+        apellido =""
+        telefono =""
+        db.collection("users").document(usuario).get().addOnSuccessListener {
+                document ->
+            if (document != null) {
+                nombre = document.data?.get("Nombre").toString()
+                apellido = document.data?.get("apellido").toString()
+                telefono = document.data?.get("telefono").toString()
+                Log.d("documento", "DocumentSnapshot data: ${document.data}")
+                Log.d("documentoD", "DocumentSnapshot data: ${nombre} ${apellido} ${telefono} ")
+            } else {
+                Log.d("documento", "No such document")
+            }
+        }
+        Log.d("UsuarioCuenta", nombre)
+    }
+    private fun irCuenta(nombre:String, apellido:String, telefono:String) {
+
+        val intent = Intent(requireContext(), Cuenta::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra("nombre", nombre)
+        intent.putExtra("apellido", apellido)
+        intent.putExtra("telefono", telefono)
+        Log.d("DatosPreviosIntent", "DocumentSnapshot data: ${nombre} ${apellido} ${telefono} ")
+        startActivity(intent)
+    }
 
 }

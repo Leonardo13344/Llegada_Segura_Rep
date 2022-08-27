@@ -19,7 +19,6 @@ import com.google.firebase.ktx.Firebase
 
 class Registro5: AppCompatActivity() {
     private lateinit var binding: ActivityRegistro5Binding
-    private lateinit var codAct: EditText
     private lateinit var auth: FirebaseAuth
     private lateinit var firebaseUser:FirebaseUser
     val db = Firebase.firestore
@@ -41,7 +40,7 @@ class Registro5: AppCompatActivity() {
         }
 
         binding.botonReenviarCV.setOnClickListener{
-            enviarCorreoVerificacion();
+            enviarCorreoVerificacion()
         }
     }
 
