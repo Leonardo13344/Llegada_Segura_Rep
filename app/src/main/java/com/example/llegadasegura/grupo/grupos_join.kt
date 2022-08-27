@@ -37,9 +37,8 @@ class grupos_join : AppCompatActivity() {
             val tipo2 = documento.data?.get("Tipo").toString()
 
             db.collection("grupos").document(identificador)
-                .collection("Miembros").document().set(hashMapOf(
+                .collection("Miembros").document(correo).set(hashMapOf(
                     "Rol" to rol,
-                    "Correo" to correo,
                 ))
 
         db.collection("users").document(correo).collection("Grupos")

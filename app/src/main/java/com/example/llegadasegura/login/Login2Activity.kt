@@ -2,14 +2,12 @@ package com.example.llegadasegura.login
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.example.llegadasegura.databinding.ActivityLogin2Binding
 import com.example.llegadasegura.principal.PrincipalActivity
-import com.example.llegadasegura.registro.MainActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -36,15 +34,7 @@ class Login2Activity : AppCompatActivity() {
             )
         }
         binding.btnRecuperarC.setOnClickListener{
-            recuperarContraseña(correo.toString());
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
-            Toast.makeText(this, "El usuario es nulo", Toast.LENGTH_LONG).show()
+            recuperarContraseña()
         }
     }
 
@@ -79,8 +69,12 @@ class Login2Activity : AppCompatActivity() {
         }
     }
 
-    private fun recuperarContraseña(correo:String){
+    private fun recuperarContraseña(){
 
+        val intent = Intent(this, RecuperarContrasenia::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
 
     }
 

@@ -48,6 +48,9 @@
             android:name=".login.LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".login.RecuperarContrasenia"
+            android:exported="false" />
+        <activity
             android:name=".registro.MainActivity"
             android:exported="true">
             <intent-filter>

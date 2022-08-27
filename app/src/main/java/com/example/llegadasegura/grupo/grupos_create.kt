@@ -76,6 +76,9 @@ class grupos_create : AppCompatActivity() {
             "Tipo" to tipo,
             )
         )
+        db.collection("grupos").document(id).collection("Miembros").document(correo).set(
+            hashMapOf("Rol" to rol)
+        )
         //Toast.makeText(this,"IngresaAlMetodoGuardar",Toast.LENGTH_LONG).show()
     }
 }

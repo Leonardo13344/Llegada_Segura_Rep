@@ -3,32 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gunmetal">
+
 
     <Button
         android:id="@+id/btnRecuperarContrasenia"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="428dp"
         android:text="Recuperar Contraseña"
+        android:hint="Código"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView15"
+        style="@style/texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="92dp"
+        android:layout_marginBottom="132dp"
         android:text="Ingrese su correo Electrónico"
 
         android:textSize="24dp"
         app:layout_constraintBottom_toTopOf="@+id/btnRecuperarContrasenia"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView16"
+        style="@style/texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="120dp"
@@ -47,7 +54,8 @@
         android:layout_marginTop="24dp"
         android:ems="15"
         android:inputType="textWebEmailAddress"
-        android:text="Correo Electrónico"
+        android:text=""
+        android:hint="Correo Electrónico"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
