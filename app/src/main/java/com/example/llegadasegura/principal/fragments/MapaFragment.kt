@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.example.llegadasegura.Clases.MapCoor
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentMapaBinding
+import com.example.llegadasegura.grupo.grupos_join
 import com.example.llegadasegura.principal.PrincipalActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -27,6 +28,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
@@ -38,6 +41,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var db: DatabaseReference
     private lateinit var mapCoor: MapCoor
+    private lateinit var grupo: grupos_join
+    private val dbStore = Firebase.firestore
 
 
     companion object {
@@ -49,14 +54,14 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Initialize view
+        //Initialize view
         binding = FragmentMapaBinding.inflate(layoutInflater, container, false)
         createFragment()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         db = FirebaseDatabase.getInstance().getReference("usuarios")
+        grupo = grupos_join()
         lastKnownLocation()
-        //updateCoordEveryHalfMinute()
-
+        validateMembers("1")
         return binding.root
     }
 
@@ -98,7 +103,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                                     location?.latitude.toString(),
                                     location?.longitude.toString()
                                 )
-                                updateCoordEveryHalfMinute()
+                                updateCoordsEveryTenSecs()
 
                             } else {
                                 Log.e("Location", "Inserting Coords...")
@@ -138,7 +143,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
     }
 
-    private fun updateCoordEveryHalfMinute() {
+    private fun updateCoordsEveryTenSecs() {
         object : CountDownTimer(10000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
@@ -148,6 +153,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             override fun onFinish() {
                 Log.e("LocationCount", "Count Down Out")
                 lastKnownLocation()
+                validateMembers("1")
             }
         }.start()
     }
@@ -155,6 +161,52 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private fun getMail(): String {
         val prefs = this.requireActivity().getSharedPreferences("loginData", Context.MODE_PRIVATE)
         return prefs.getString("email", null).toString().replace(".", "!")
+    }
+
+    private fun validateMembers(id: String) {
+        val allMembersStore = dbStore.collection("grupos").document(id).collection("Miembros").get()
+        //var userListReal: MutableList<String> = mutableListOf()
+        db.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds in snapshot.children) {
+                    ds.key.toString().replace("!",".")
+                }
+            }
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+        allMembersStore.addOnSuccessListener { documents ->
+            for (user in documents) {
+                Log.d("DataStore", "Consulting ${user.id} if it is in RealTime...")
+                db.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        for (ds in snapshot.children) {
+                            var userR = ds.key.toString()
+                            Log.d("DataStore", "${user.id} , ${userR.replace("!",".")}")
+                            if(user.id == userR.replace("!",".")){
+                                db.child(userR).get().addOnCompleteListener{ task ->
+                                    if(task.isSuccessful){
+                                        val snap = task.result
+                                        val lat = snap.child("Latitud").getValue(String::class.java)
+                                        val long = snap.child("Longitud").getValue(String::class.java)
+                                        Log.d("DataStore", "$lat , $long")
+                                    }else{
+                                        Log.d("DataStore",task.exception!!.message!!)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    override fun onCancelled(error: DatabaseError) {
+                    }
+                })
+            }
+        }
+    }
+
+
+    private fun drawMember() {
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
