@@ -29,18 +29,15 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.*
 
 
-class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
+class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
+    GoogleMap.OnMyLocationClickListener {
     // TODO: Rename and change types of parameters
 
     private lateinit var map: GoogleMap
     private lateinit var binding: FragmentMapaBinding
-    private lateinit var principal : PrincipalActivity
-    private lateinit var grupos : GroupsFragment
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var db: DatabaseReference
     private lateinit var mapCoor: MapCoor
-    private var isHere = false
-
 
 
     companion object {
@@ -59,74 +56,89 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         db = FirebaseDatabase.getInstance().getReference("usuarios")
         lastKnownLocation()
         //updateCoordEveryHalfMinute()
+
         return binding.root
     }
 
 
-    private fun lastKnownLocation(){
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+    private fun lastKnownLocation() {
+        if (!isAdded) {
+            Log.e("Location", "Fragment Not Added to the Principal Activity")
             return
-        }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
-                // Got last known location. In some rare situations this can be null.
-                Log.e("Location", "Longitud: " + location?.longitude + "Latitud: " + location?.latitude)
-                Log.e("Location",db.child(getMail()).key.toString())
-                mapCoor = MapCoor(location?.latitude!!.toDouble(), location?.longitude!!.toDouble(), getMail())
-                db.child(getMail()).addListenerForSingleValueEvent(object: ValueEventListener{
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        if(snapshot.exists()){
-                            Log.e("Location", "test update")
-                            updateCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
-                            updateCoordEveryHalfMinute()
-
-                        }else{
-                            Log.e("Location", "test insert")
-                            insertCoor(getMail(), location?.latitude.toString(), location?.longitude.toString())
-                        }
-                    }
-                    override fun onCancelled(error: DatabaseError) {
-                        throw error.toException()
-                    }
-                })
-
+        } else {
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
             }
-    }
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    Log.e(
+                        "Location",
+                        "Longitud: " + location?.longitude + "Latitud: " + location?.latitude
+                    )
+                    Log.e("Location", db.child(getMail()).key.toString())
+                    mapCoor = MapCoor(
+                        location?.latitude!!.toDouble(),
+                        location?.longitude!!.toDouble(),
+                        getMail()
+                    )
+                    db.child(getMail()).addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            if (snapshot.exists()) {
+                                Log.e("Location", "Updating Coords...")
+                                updateCoor(
+                                    getMail(),
+                                    location?.latitude.toString(),
+                                    location?.longitude.toString()
+                                )
+                                updateCoordEveryHalfMinute()
 
-    private fun insertCoor(mail:String, lat:String, lang:String){
-        val latLang: HashMap<String, String> = HashMap<String, String>()
-        latLang["Longitud"] = lang
-        latLang["Latitud"] = lat
-        db.child(mail).setValue(latLang).addOnCompleteListener(){
-            Log.e("Location", "Insert Correcto")
+                            } else {
+                                Log.e("Location", "Inserting Coords...")
+                                insertCoor(
+                                    getMail(),
+                                    location?.latitude.toString(),
+                                    location?.longitude.toString()
+                                )
+                            }
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            throw error.toException()
+                        }
+                    })
+
+                }
         }
     }
 
-    private fun updateCoor(mail:String, lat:String, lang:String){
+    private fun insertCoor(mail: String, lat: String, lang: String) {
         val latLang: HashMap<String, String> = HashMap<String, String>()
         latLang["Longitud"] = lang
         latLang["Latitud"] = lat
-        db.child(mail).updateChildren(latLang as Map<String, String>).addOnCompleteListener(){
-            Log.e("Location", "Update Correcto")
+        db.child(mail).setValue(latLang).addOnCompleteListener() {
+            Log.e("Location", "Correct Insert")
+        }
+    }
+
+    private fun updateCoor(mail: String, lat: String, lang: String) {
+        val latLang: HashMap<String, String> = HashMap<String, String>()
+        latLang["Longitud"] = lang
+        latLang["Latitud"] = lat
+        db.child(mail).updateChildren(latLang as Map<String, String>).addOnCompleteListener() {
+            Log.e("Location", "Correct Update")
         }
 
     }
 
-    private fun updateCoordEveryHalfMinute(){
+    private fun updateCoordEveryHalfMinute() {
         object : CountDownTimer(10000, 1000) {
 
             override fun onTick(millisUntilFinished: Long) {
@@ -134,27 +146,24 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             }
 
             override fun onFinish() {
-                Log.e("LocationCount", "Salida Count Down")
+                Log.e("LocationCount", "Count Down Out")
                 lastKnownLocation()
             }
         }.start()
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
-
-    private fun getMail(): String{
+    private fun getMail(): String {
         val prefs = this.requireActivity().getSharedPreferences("loginData", Context.MODE_PRIVATE)
-        return prefs.getString("email", null).toString().replace(".","!")
+        return prefs.getString("email", null).toString().replace(".", "!")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }
 
-    private fun createFragment(){
-        val mapFragment: SupportMapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
+    private fun createFragment() {
+        val mapFragment: SupportMapFragment =
+            childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
     }
 
@@ -167,7 +176,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
 
-    private fun animateCamera(){
+    private fun animateCamera() {
         val coordinates = LatLng(-0.1438661237117817, -78.45302369572558)
         //val marker = MarkerOptions().position(coordinates).title("Quito - Ecuador")
         //map.addMarker(marker)
@@ -193,13 +202,17 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         }
     }
 
-    private fun requestLocationPermission(){
+    private fun requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
                 requireActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
-        ){
-            Toast.makeText(requireContext(), "Ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
+        ) {
+            Toast.makeText(
+                requireContext(),
+                "Ve a ajustes y acepta los permisos",
+                Toast.LENGTH_SHORT
+            ).show()
         } else {
             ActivityCompat.requestPermissions(
                 requireActivity(),
@@ -215,16 +228,19 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        when(requestCode){
-            PrincipalActivity.REQUEST_CODE_LOCATION -> if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        when (requestCode) {
+            PrincipalActivity.REQUEST_CODE_LOCATION -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 map.isMyLocationEnabled = true
-            }else{
-                Toast.makeText(requireContext(), "Para activar la localización ve a ajuster y acepta los permisos", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Para activar la localización ve a ajuster y acepta los permisos",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-            else ->{}
+            else -> {}
         }
     }
-
 
 
     override fun onMyLocationButtonClick(): Boolean {
@@ -233,7 +249,11 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     override fun onMyLocationClick(p0: Location) {//el p0 guarda la direccion en latitud y longitud
-        Toast.makeText(requireContext(), "Estas en ${p0.latitude}, ${p0.longitude}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            "Estas en ${p0.latitude}, ${p0.longitude}",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
 }
