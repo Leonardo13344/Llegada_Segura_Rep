@@ -29,14 +29,16 @@ class ConfigurationFragment : Fragment() {
     private lateinit var nombre:String
     private lateinit var apellido:String
     private lateinit var telefono:String
-    val db = Firebase.firestore
+    private lateinit var correo:String
+    private val db = Firebase.firestore
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentConfigurationBinding.inflate(layoutInflater, container, false)
         //Se llenan los datos
+
         llenarDatos()
         binding.btnCerrar.setOnClickListener{
             showAlert()
@@ -45,7 +47,7 @@ class ConfigurationFragment : Fragment() {
             irTerminos()
         }
         binding.btnCuenta.setOnClickListener{
-            irCuenta(nombre, apellido, telefono)
+            irCuenta(nombre, apellido, telefono, correo)
         }
         return binding.root
     }
@@ -79,6 +81,7 @@ class ConfigurationFragment : Fragment() {
 
     private fun llenarDatos() {
         val usuario = FirebaseAuth.getInstance().currentUser?.email.toString()
+        correo = usuario
         nombre = ""
         apellido =""
         telefono =""
@@ -96,11 +99,12 @@ class ConfigurationFragment : Fragment() {
         }
         Log.d("UsuarioCuenta", nombre)
     }
-    private fun irCuenta(nombre:String, apellido:String, telefono:String) {
+    private fun irCuenta(nombre:String, apellido:String, telefono:String, correo:String) {
 
         val intent = Intent(requireContext(), Cuenta::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.putExtra("correo", correo)
         intent.putExtra("nombre", nombre)
         intent.putExtra("apellido", apellido)
         intent.putExtra("telefono", telefono)
