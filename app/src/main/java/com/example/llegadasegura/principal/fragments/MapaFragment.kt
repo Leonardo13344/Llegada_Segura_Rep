@@ -242,9 +242,15 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                                         )
                                         var listCoords = mutableListOf<LatLng>()
                                         listCoords.add(coords)
-                                        createMarker(coords)
+                                        var m = createMarker(coords)
+                                        object : CountDownTimer(10000, 1000) {
+                                            override fun onTick(p0: Long) {
+                                            }
 
-
+                                            override fun onFinish() {
+                                                m?.remove()
+                                            }
+                                        }.start()
                                     } else {
                                         Log.d("DataStore", task.exception!!.message!!)
                                     }
@@ -262,11 +268,10 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
     private fun createMarker(coords: LatLng): Marker? {
         return map.addMarker(
-                MarkerOptions()
-                    .position(coords)
+            MarkerOptions()
+                .position(coords)
         )
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
