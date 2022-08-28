@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.example.llegadasegura.databinding.CuentaConfiguracionBinding
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
@@ -28,6 +29,10 @@ class Cuenta: AppCompatActivity() {
         binding.txtApellido.text = apellido
         binding.txtNumero.text = telefono
         cargarImagen(correo)
+        /*if (!ImagenUri.equals(null)){
+                binding.btnFoto.isVisible = true;
+                binding.btnSubir.isVisible = false;
+        }*/
         setContentView(binding.root)
         binding.btnFoto.setOnClickListener{
             seleccionarImagen()
@@ -39,7 +44,6 @@ class Cuenta: AppCompatActivity() {
     }
 
     fun subirImagen(correo:String) {
-
         val storageReference = FirebaseStorage.getInstance().getReference("images/$correo")
         storageReference.putFile(ImagenUri).addOnSuccessListener {
             binding.imgFoto.setImageURI(null)
@@ -64,6 +68,7 @@ class Cuenta: AppCompatActivity() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 100)
+
 
 
     }

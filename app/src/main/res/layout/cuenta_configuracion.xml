@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/imgFoto"
-        android:layout_width="225dp"
-        android:layout_height="400dp"
+        android:layout_width="180dp"
+        android:layout_height="320dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
@@ -20,87 +20,89 @@
         android:id="@+id/btnFoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:text="Agregar/ Cambiar foto"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintHorizontal_bias="0.427"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgFoto" />
 
     <TextView
         android:id="@+id/textView17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="84dp"
+        android:layout_height="26dp"
         android:layout_marginStart="88dp"
         android:layout_marginTop="64dp"
         android:text="Nombre: "
+        android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
 
     <TextView
         android:id="@+id/textView19"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="85dp"
+        android:layout_height="26dp"
         android:layout_marginStart="88dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginTop="4dp"
         android:text="Apellido"
+        android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
+        app:layout_constraintTop_toBottomOf="@+id/textView17" />
 
     <TextView
         android:id="@+id/textView21"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="86dp"
+        android:layout_height="26dp"
         android:layout_marginStart="88dp"
-        android:layout_marginTop="152dp"
+        android:layout_marginTop="4dp"
         android:text="Teléfono"
+        android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
+        app:layout_constraintTop_toBottomOf="@+id/textView19" />
 
     <TextView
         android:id="@+id/txtNombre"
-        android:layout_width="123dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="60dp"
+        android:layout_width="195dp"
+        android:layout_height="26dp"
         android:layout_marginTop="64dp"
         android:text="TextView"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView17"
         app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
 
     <TextView
         android:id="@+id/txtApellido"
-        android:layout_width="123dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="108dp"
+        android:layout_width="196dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView17"
-        app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
+        app:layout_constraintStart_toEndOf="@+id/textView19"
+        app:layout_constraintTop_toBottomOf="@+id/txtNombre" />
 
     <TextView
         android:id="@+id/txtNumero"
-        android:layout_width="123dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="152dp"
+        android:layout_width="196dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="124dp"
         android:text="TextView"
+        android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toEndOf="@+id/textView21"
         app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
 
     <Button
         android:id="@+id/btnEditarDatos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="188dp"
         android:text="Editar datos"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.795"
+        app:layout_constraintHorizontal_bias="0.806"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
 
@@ -108,10 +110,10 @@
         android:id="@+id/btnSubir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Subir"
+        android:layout_marginTop="80dp"
+        android:text="Confirmar"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.716"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnFoto" />
+        app:layout_constraintTop_toBottomOf="@+id/imgFoto" />
 </androidx.constraintlayout.widget.ConstraintLayout>
