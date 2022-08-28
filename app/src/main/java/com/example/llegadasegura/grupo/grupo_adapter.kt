@@ -10,6 +10,7 @@ import com.example.llegadasegura.databinding.ItemGrupoBinding
 class grupo_adapter(
     val grupo: List<Grupo>):
     RecyclerView.Adapter<grupo_adapter.GrupoHolder>() {
+
     inner class GrupoHolder(item:View):RecyclerView.ViewHolder(item)  {
         private var binding: ItemGrupoBinding = ItemGrupoBinding.bind(item)
         fun render(grupo:Grupo){

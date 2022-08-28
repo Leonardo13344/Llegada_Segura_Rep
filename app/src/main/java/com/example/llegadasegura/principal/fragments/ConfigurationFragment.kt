@@ -16,6 +16,7 @@ import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentConfigurationBinding
 import com.example.llegadasegura.principal.PrincipalActivity
 import com.example.llegadasegura.registro.MainActivity
+import com.example.llegadasegura.utils.AcercaDe
 import com.example.llegadasegura.utils.Cuenta
 import com.example.llegadasegura.utils.TerminosResultActivityInfo
 import com.google.firebase.auth.FirebaseAuth
@@ -49,6 +50,9 @@ class ConfigurationFragment : Fragment() {
         binding.btnCuenta.setOnClickListener{
             irCuenta(nombre, apellido, telefono, correo)
         }
+        binding.btnSoporte.setOnClickListener{
+            irAAcercaDe()
+        }
         return binding.root
     }
 
@@ -74,6 +78,12 @@ class ConfigurationFragment : Fragment() {
     }
     private fun irTerminos(){
         val intent = Intent(requireContext(), TerminosResultActivityInfo::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
+    private fun irAAcercaDe(){
+        val intent = Intent(requireContext(), AcercaDe::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(intent)

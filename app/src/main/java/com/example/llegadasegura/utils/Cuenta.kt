@@ -1,6 +1,8 @@
 package com.example.llegadasegura.utils
+import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -8,6 +10,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.rotationMatrix
 import com.example.llegadasegura.databinding.CuentaConfiguracionBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -20,6 +23,9 @@ class Cuenta: AppCompatActivity() {
     private lateinit var ImagenUri: Uri
     private lateinit var correo:String
     val db = Firebase.firestore
+    var activarDatos = false
+    var activarImagen = false
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle = intent.extras
         super.onCreate(savedInstanceState)
@@ -33,33 +39,47 @@ class Cuenta: AppCompatActivity() {
         binding.txtNumero.hint = telefono
         cargarImagen(correo)
         setContentView(binding.root)
+
+
         binding.btnFoto.setOnClickListener{
-            seleccionarImagen()
-        }
-        binding.btnSubir.setOnClickListener {
-            subirImagen(correo)
-            try {
-                Thread.sleep(1000)
-            }catch (e: InterruptedIOException){
-                e.printStackTrace()
+            if(!activarImagen){
+                binding.btnFoto.text = "Agregar/Cambiar Foto"
+                seleccionarImagen()
+                activarImagen=true
+                binding.btnFoto.text = "Confirmar"
+            }else{
+                subirImagen(correo)
+                try {
+                    Thread.sleep(1500)
+                }catch (e: InterruptedIOException){
+                    e.printStackTrace()
+                }
+                cargarImagen(correo)
+                activarImagen = false
+                binding.btnFoto.text = "Agregar/Cambiar Foto"
             }
-            cargarImagen(correo)
         }
 
-        if(binding.btnEditarDatos.text.toString() =="EDITAR DATOS"){
-            binding.btnEditarDatos.setOnClickListener{
-                activarCasillas()
+        binding.btnEditarDatos.setOnClickListener{
+            if(!activarDatos){
+                activarCasillas(true)
                 binding.btnEditarDatos.text="CONFIRMAR"
-                Log.d("boton",binding.btnEditarDatos.text.toString() )
-                Log.d("botonVerdad",(binding.btnEditarDatos.text.toString() =="EDITAR DATOS").toString())
-            }
-        }else /*if(binding.btnEditarDatos.text.toString() =="CONFIRMAR")*/ {
-            Log.d("EntraCD", "Entra a cambiar los datos")
-            binding.btnEditarDatos.setOnClickListener {
-                cambiarDatos(
-                    binding.txtNombre.text.toString(), binding.txtApellido.text.toString(),
-                    binding.txtNumero.text.toString(), correo
-                )
+                activarDatos = true
+                Toast.makeText(this,"Ingrese los nuevos datos", Toast.LENGTH_SHORT)
+            }else{
+                if(binding.txtNombre.text.isNotBlank()&&binding.txtNombre.text.isNotBlank()&&binding.txtNombre.text.isNotBlank()){
+                    cambiarDatos(
+                        binding.txtNombre.text.toString(), binding.txtApellido.text.toString(),
+                        binding.txtNumero.text.toString(), correo
+                    )
+                    binding.txtNombre.setText("")
+                    binding.txtNumero.setText("")
+                    binding.txtApellido.setText("")
+                    Toast.makeText(this, "Los datos se han actualizado", Toast.LENGTH_LONG).show()
+                }else{
+                    Toast.makeText(this,"Los campos ingresados no son correctos", Toast.LENGTH_SHORT).show()
+                }
+                activarCasillas(false)
                 db.collection("users").document(correo).get().addOnSuccessListener { document ->
                     if (document != null) {
                         binding.txtNombre.hint = document.data?.get("Nombre").toString()
@@ -68,14 +88,14 @@ class Cuenta: AppCompatActivity() {
                     } else {
                         Log.d("documento", "No se pudo cargar los datos")
                     }
-                    Toast.makeText(this, "Los datos se han actualizado", Toast.LENGTH_LONG)
                 }
+                activarDatos= false
+                binding.btnEditarDatos.text = "EDITAR DATOS"
             }
         }
-
     }
 
-    fun subirImagen(correo:String) {
+    private fun subirImagen(correo:String) {
         val storageReference = FirebaseStorage.getInstance().getReference("images/$correo")
         storageReference.putFile(ImagenUri).addOnSuccessListener {
             binding.imgFoto.setImageURI(null)
@@ -86,7 +106,7 @@ class Cuenta: AppCompatActivity() {
         }
     }
 
-    fun cargarImagen(correo:String){
+    private fun cargarImagen(correo:String){
 
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Cargando datos...")
@@ -98,6 +118,7 @@ class Cuenta: AppCompatActivity() {
             if(progressDialog.isShowing){
                 progressDialog.dismiss()
             }
+            rotationMatrix(90f,0f,0f)
             val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
             binding.imgFoto.setImageBitmap(bitmap)
 
@@ -105,7 +126,7 @@ class Cuenta: AppCompatActivity() {
             Toast.makeText(this, "No se pudo cargar la imagen", Toast.LENGTH_LONG).show()
         }
     }
-    fun seleccionarImagen(){
+    private fun seleccionarImagen(){
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         intent.action = Intent.ACTION_GET_CONTENT
         startActivityForResult(intent, 100)
@@ -121,7 +142,8 @@ class Cuenta: AppCompatActivity() {
             binding.imgFoto.setImageURI(ImagenUri)
         }
     }
-    fun cambiarDatos(nombre: String, apellido:String, telefono:String, correo:String){
+    private fun cambiarDatos(nombre: String, apellido:String, telefono:String, correo:String){
+        Log.d("EntraD", "Entra con los valores $nombre $apellido $telefono $correo")
         db.collection("users").document(correo).set(
             hashMapOf("Nombre" to nombre,
             "apellido" to apellido,
@@ -129,20 +151,20 @@ class Cuenta: AppCompatActivity() {
         )
 
     }
-    fun activarCasillas(){
-        binding.txtApellido.isFocusable = true
-        binding.txtApellido.isClickable = true
-        binding.txtApellido.isFocusableInTouchMode = true
+    private fun activarCasillas(verdad: Boolean){
+        binding.txtApellido.isFocusable = verdad
+        binding.txtApellido.isClickable = verdad
+        binding.txtApellido.isFocusableInTouchMode = verdad
         binding.txtApellido.hint =""
-        binding.txtNombre.isClickable = true
-        binding.txtNombre.isFocusable = true
-        binding.txtNombre.isFocusableInTouchMode = true
+        binding.txtNombre.isClickable = verdad
+        binding.txtNombre.isFocusable = verdad
+        binding.txtNombre.isFocusableInTouchMode = verdad
         binding.txtNombre.hint =""
-        binding.txtNumero.isClickable = true
-        binding.txtNumero.isFocusable = true
-        binding.txtNumero.isFocusableInTouchMode = true
+        binding.txtNumero.isClickable = verdad
+        binding.txtNumero.isFocusable = verdad
+        binding.txtNumero.isFocusableInTouchMode = verdad
         binding.txtNumero.hint =""
-        Toast.makeText(this, "Modifique sus datos", Toast.LENGTH_LONG).show()
+        this.activarDatos = true
     }
 
 }

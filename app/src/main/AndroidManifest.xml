@@ -35,6 +35,9 @@
             android:name=".utils.TerminosResultActivityInfo"
             android:exported="false" />
         <activity
+            android:name=".utils.AcercaDe"
+            android:exported="false" />
+        <activity
             android:name=".utils.Cuenta"
             android:exported="false" />
 
