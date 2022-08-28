@@ -77,7 +77,7 @@ class Cuenta: AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 100 && resultCode == RESULT_OK){
-            ImagenUri =data?.data!!
+            ImagenUri = data?.data!!
             binding.imgFoto.setImageURI(ImagenUri)
         }
     }

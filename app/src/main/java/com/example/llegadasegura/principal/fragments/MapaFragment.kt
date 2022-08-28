@@ -28,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
@@ -47,6 +48,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var mapCoor: MapCoor
     private lateinit var grupo: grupos_join
     private val dbStore = Firebase.firestore
+    private lateinit var markers: MutableList<Marker>
 
 
     companion object {
@@ -64,6 +66,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         db = FirebaseDatabase.getInstance().getReference("usuarios")
         grupo = grupos_join()
+        markers = mutableListOf()
         lastKnownLocation()
         validateMembers("1")
         return binding.root
@@ -173,79 +176,98 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
     }
 
-    private fun validate(groupMembers: Task<QuerySnapshot>, myCallback: MyCallback) {
+    private fun validate(
+        groupMembers: Task<QuerySnapshot>,
+        realMembers: DatabaseReference,
+        myCallback: MyCallback
+    ) {
         groupMembers.addOnCompleteListener { task ->
             val list = mutableListOf<String>()
             for (document in task.result) {
-                val correo = document.id.toString()
+                val correo = document.id
                 list.add(correo)
             }
             val mail = getMail().replace("!", ".")
-            if (list.contains(mail)) {
-                myCallback.onCallback(true)
-            } else {
-                myCallback.onCallback(false)
-            }
-        }
+            realMembers.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val list2 = mutableListOf<String>()
+                    for (u2 in snapshot.children) {
+                        list2.add(u2.key.toString().replace("!", "."))
+                    }
+                    Log.d("Correos", "$list + $list2")
+                    val list3 = mutableListOf<String>()
+                    for (u in list2) {
+                        if (list.contains(u)) {
+                            list3.add(u)
+                        }
+                    }
+                    Log.d("Correos", "$list3")
+                    if (list.contains(mail)) {
+                        myCallback.onCallback(true, list3)
+                    } else {
+                        myCallback.onCallback(false, list3)
+                    }
 
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                }
+            })
+        }
     }
 
     private fun validateMembers(id: String) {
         val allMembersStore = dbStore.collection("grupos").document(id).collection("Miembros").get()
-        validate(allMembersStore, object : MyCallback {
-            override fun onCallback(value: Boolean) {
+        validate(allMembersStore, db, object : MyCallback {
+            override fun onCallback(value: Boolean, list: MutableList<String>) {
                 if (value) {
                     allMembersStore.addOnSuccessListener { documents ->
                         for (user in documents) {
-                            db.addListenerForSingleValueEvent(object : ValueEventListener {
-                                override fun onDataChange(snapshot: DataSnapshot) {
-                                    for (ds in snapshot.children) {
-                                        var userR = ds.key.toString()
-                                        Log.d("Deb", userR)
-                                        db.child(userR).get().addOnCompleteListener { task ->
-                                            if (task.isSuccessful) {
-                                                val snap = task.result
-                                                val lat = snap.child("Latitud")
-                                                    .getValue(String::class.java)
-                                                val lang = snap.child("Longitud")
-                                                    .getValue(String::class.java)
-                                                Log.d("DataStore", "$lat , $lang")
-                                                val coords = LatLng(
-                                                    lat.toString().toDouble(),
-                                                    lang.toString().toDouble()
-                                                )
-                                                Log.d("Mails","${user.id} , ${getMail().replace("!",".")}")
-                                                if (user.id != getMail().replace("!",".")) {
-                                                    drawMember(map, coords)
-                                                }
-                                            } else {
-                                                Log.d("DataStore", task.exception!!.message!!)
-                                            }
-                                        }
+                            for (u2 in list) {
+                                db.child(u2.replace(".", "!")).get().addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val snap = task.result
+                                        val lat = snap.child("Latitud")
+                                            .getValue(String::class.java)
+                                        val lang = snap.child("Longitud")
+                                            .getValue(String::class.java)
+                                        Log.d("DataStore", "$lat , $lang")
+                                        val coords = LatLng(
+                                            lat.toString().toDouble(),
+                                            lang.toString().toDouble()
+                                        )
+                                        Log.d(
+                                            "Mails",
+                                            "${user.id} , ${getMail().replace("!", ".")}"
+                                        )
+                                        var listCoords = mutableListOf<LatLng>()
+                                        listCoords.add(coords)
+                                        createMarker(coords)
 
+
+                                    } else {
+                                        Log.d("DataStore", task.exception!!.message!!)
                                     }
                                 }
-                                override fun onCancelled(error: DatabaseError) {
-                                }
-                            })
+                            }
                         }
                     }
                 } else {
                     return
                 }
             }
-
         })
-
     }
 
 
-    private fun drawMember(map: GoogleMap, coords: LatLng) {
-        map.addMarker(
-            MarkerOptions()
-                .position(coords)
+    private fun createMarker(coords: LatLng): Marker? {
+        return map.addMarker(
+                MarkerOptions()
+                    .position(coords)
         )
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -268,8 +290,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
 
     private fun animateCamera() {
         val coordinates = LatLng(-0.1438661237117817, -78.45302369572558)
-        //val marker = MarkerOptions().position(coordinates).title("Quito - Ecuador")
-        //map.addMarker(marker)
         map.animateCamera(
             CameraUpdateFactory.newLatLngZoom(coordinates, 10f),
             4000,
