@@ -17,6 +17,7 @@ class Cuenta: AppCompatActivity() {
     private lateinit var binding: CuentaConfiguracionBinding
     private lateinit var ImagenUri: Uri
     private lateinit var correo:String
+    private lateinit var prueba:String
     override fun onCreate(savedInstanceState: Bundle?) {
         val bundle = intent.extras
         super.onCreate(savedInstanceState)
