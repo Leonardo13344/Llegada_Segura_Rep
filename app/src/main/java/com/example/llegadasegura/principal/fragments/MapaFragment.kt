@@ -20,6 +20,7 @@ import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentMapaBinding
 import com.example.llegadasegura.grupo.grupos_join
 import com.example.llegadasegura.principal.PrincipalActivity
+import com.example.llegadasegura.utils.MyCallback
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,7 +28,10 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.tasks.Task
 import com.google.firebase.database.*
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -134,7 +138,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun updateCoor(mail: String, lat: String, lang: String) {
-        val latLang: HashMap<String, String> = HashMap<String, String>()
+        val latLang: HashMap<String, String> = HashMap()
         latLang["Longitud"] = lang
         latLang["Latitud"] = lat
         db.child(mail).updateChildren(latLang as Map<String, String>).addOnCompleteListener() {
@@ -159,54 +163,88 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun getMail(): String {
-        val prefs = this.requireActivity().getSharedPreferences("loginData", Context.MODE_PRIVATE)
-        return prefs.getString("email", null).toString().replace(".", "!")
+        return if (!isAdded) {
+            ""
+        } else {
+            val prefs =
+                this.requireActivity().getSharedPreferences("loginData", Context.MODE_PRIVATE)
+            prefs.getString("email", null).toString().replace(".", "!")
+        }
+
+    }
+
+    private fun validate(groupMembers: Task<QuerySnapshot>, myCallback: MyCallback) {
+        groupMembers.addOnCompleteListener { task ->
+            val list = mutableListOf<String>()
+            for (document in task.result) {
+                val correo = document.id.toString()
+                list.add(correo)
+            }
+            val mail = getMail().replace("!", ".")
+            if (list.contains(mail)) {
+                myCallback.onCallback(true)
+            } else {
+                myCallback.onCallback(false)
+            }
+        }
+
     }
 
     private fun validateMembers(id: String) {
         val allMembersStore = dbStore.collection("grupos").document(id).collection("Miembros").get()
-        //var userListReal: MutableList<String> = mutableListOf()
-        db.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (ds in snapshot.children) {
-                    ds.key.toString().replace("!",".")
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-            }
-        })
-        allMembersStore.addOnSuccessListener { documents ->
-            for (user in documents) {
-                Log.d("DataStore", "Consulting ${user.id} if it is in RealTime...")
-                db.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        for (ds in snapshot.children) {
-                            var userR = ds.key.toString()
-                            Log.d("DataStore", "${user.id} , ${userR.replace("!",".")}")
-                            if(user.id == userR.replace("!",".")){
-                                db.child(userR).get().addOnCompleteListener{ task ->
-                                    if(task.isSuccessful){
-                                        val snap = task.result
-                                        val lat = snap.child("Latitud").getValue(String::class.java)
-                                        val long = snap.child("Longitud").getValue(String::class.java)
-                                        Log.d("DataStore", "$lat , $long")
-                                    }else{
-                                        Log.d("DataStore",task.exception!!.message!!)
+        validate(allMembersStore, object : MyCallback {
+            override fun onCallback(value: Boolean) {
+                if (value) {
+                    allMembersStore.addOnSuccessListener { documents ->
+                        for (user in documents) {
+                            db.addListenerForSingleValueEvent(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    for (ds in snapshot.children) {
+                                        var userR = ds.key.toString()
+                                        Log.d("Deb", userR)
+                                        db.child(userR).get().addOnCompleteListener { task ->
+                                            if (task.isSuccessful) {
+                                                val snap = task.result
+                                                val lat = snap.child("Latitud")
+                                                    .getValue(String::class.java)
+                                                val lang = snap.child("Longitud")
+                                                    .getValue(String::class.java)
+                                                Log.d("DataStore", "$lat , $lang")
+                                                val coords = LatLng(
+                                                    lat.toString().toDouble(),
+                                                    lang.toString().toDouble()
+                                                )
+                                                Log.d("Mails","${user.id} , ${getMail().replace("!",".")}")
+                                                if (user.id != getMail().replace("!",".")) {
+                                                    drawMember(map, coords)
+                                                }
+                                            } else {
+                                                Log.d("DataStore", task.exception!!.message!!)
+                                            }
+                                        }
+
                                     }
                                 }
-                            }
+                                override fun onCancelled(error: DatabaseError) {
+                                }
+                            })
                         }
                     }
-                    override fun onCancelled(error: DatabaseError) {
-                    }
-                })
+                } else {
+                    return
+                }
             }
-        }
+
+        })
+
     }
 
 
-    private fun drawMember() {
-
+    private fun drawMember(map: GoogleMap, coords: LatLng) {
+        map.addMarker(
+            MarkerOptions()
+                .position(coords)
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
