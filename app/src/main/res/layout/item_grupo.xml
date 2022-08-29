@@ -65,6 +65,17 @@
             app:srcCompat="@drawable/ic_familia"
             android:contentDescription="ImagenDeGrupo" />
 
+        <Button
+            android:id="@+id/btnTest"
+            android:layout_width="64dp"
+            android:layout_height="38dp"
+            android:layout_marginTop="24dp"
+            android:text="B"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.252"
+            app:layout_constraintStart_toEndOf="@+id/descripcionGrupo"
+            app:layout_constraintTop_toBottomOf="@+id/nombreGrupo" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

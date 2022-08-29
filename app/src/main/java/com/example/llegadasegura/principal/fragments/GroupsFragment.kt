@@ -1,8 +1,10 @@
 package com.example.llegadasegura.principal.fragments
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +23,7 @@ class GroupsFragment : Fragment() {
 
     private lateinit var binding: FragmentGroupsBinding
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,6 +32,9 @@ class GroupsFragment : Fragment() {
         binding = FragmentGroupsBinding.inflate(layoutInflater, container,false)
         val args = arguments
         val myList :ArrayList<Grupo> = args?.getParcelableArrayList<Grupo>("list") as ArrayList<Grupo>
+
+
+
         var correo: String? = args.getString("correo")
         // Inflate the layout for this fragment
 
@@ -63,6 +69,7 @@ class GroupsFragment : Fragment() {
             it.startActivity(intent)
         }
     }
+
 
     }
 

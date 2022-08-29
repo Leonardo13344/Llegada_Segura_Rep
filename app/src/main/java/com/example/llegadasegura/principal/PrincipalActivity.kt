@@ -1,6 +1,7 @@
 package com.example.llegadasegura.principal
 
 
+
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -12,11 +13,13 @@ import com.example.llegadasegura.principal.fragments.ConfigurationFragment
 import com.example.llegadasegura.principal.fragments.DirectionsFragment
 import com.example.llegadasegura.principal.fragments.GroupsFragment
 import com.example.llegadasegura.principal.fragments.MapaFragment
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class PrincipalActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPrincipalBinding
+    private lateinit var db: FirebaseFirestore
 
     companion object {
         const val REQUEST_CODE_LOCATION = 0
@@ -28,13 +31,20 @@ class PrincipalActivity : AppCompatActivity() {
         val bundle = intent.extras
 
         val correo = bundle?.getString("correo")
-        val db = Firebase.firestore
-        val grupos2:ArrayList<Grupo> = arrayListOf()
+        db = Firebase.firestore
+        val grupos2: ArrayList<Grupo> = arrayListOf()
         val datosGrupos = db.collection("users").document(correo.toString()).collection("Grupos")
         datosGrupos.get().addOnSuccessListener { documents ->
             for (document in documents) {
                 Log.d("Grupo Dato:", "${document.data}")
-                grupos2.add(Grupo(document.id,document.data.get("Rol").toString(),document.data.get("Nombre").toString(),document.data.get("Tipo").toString()))
+                grupos2.add(
+                    Grupo(
+                        document.id,
+                        document.data.get("Rol").toString(),
+                        document.data.get("Nombre").toString(),
+                        document.data.get("Tipo").toString()
+                    )
+                )
             }
             Log.d("Grupos", grupos2.toString())
         }
@@ -42,12 +52,14 @@ class PrincipalActivity : AppCompatActivity() {
                 Log.w("Grupos", "Error getting documents: ", exception)
             }
 
+
         val datosUsuario = db.collection("users").document(correo.toString()).get()
         datosUsuario.addOnSuccessListener { usuario ->
             Log.d("DatosUsuario", "${usuario.data}")
         }
         setContentView(binding.root)
         //createFragment()
+
 
         val configurationFragment = ConfigurationFragment()
         val mapaFragment = MapaFragment()
@@ -69,13 +81,15 @@ class PrincipalActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_grupos -> {
-                    setCurrentFragment(gruposFragment, grupos2,correo.toString())
+                    setCurrentFragment(gruposFragment, grupos2, correo.toString())
                     true
                 }
                 else -> false
             }
         }
     }
+
+
 
     private fun setCurrentFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
@@ -86,12 +100,13 @@ class PrincipalActivity : AppCompatActivity() {
         }
     }
 
-    private fun setCurrentFragment(fragment: Fragment, myList : ArrayList<Grupo>, correo:String) {
+    private fun setCurrentFragment(fragment: Fragment, myList: ArrayList<Grupo>, correo: String) {
         supportFragmentManager.beginTransaction().apply {
             setCustomAnimations(R.anim.slide_in, R.anim.fade_out, R.anim.fade_in, R.anim.slide_out)
             val args = Bundle()
-            args.putParcelableArrayList("list",myList)
-            args.putString("correo",correo)
+            args.putParcelableArrayList("list", myList)
+
+            args.putString("correo", correo)
             fragment.arguments = args
             replace(R.id.cointainerView, fragment)
             commit()

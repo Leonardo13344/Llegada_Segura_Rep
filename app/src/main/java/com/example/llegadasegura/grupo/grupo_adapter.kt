@@ -1,4 +1,6 @@
 package com.example.llegadasegura.grupo
+
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -6,23 +8,35 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.llegadasegura.Clases.Grupo
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.ItemGrupoBinding
+import com.example.llegadasegura.principal.fragments.GroupsFragment
+import com.example.llegadasegura.principal.fragments.MapaFragment
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class grupo_adapter(
-    val grupo: List<Grupo>):
+    val grupo: List<Grupo>
+) :
     RecyclerView.Adapter<grupo_adapter.GrupoHolder>() {
 
-    inner class GrupoHolder(item:View):RecyclerView.ViewHolder(item)  {
-        private var binding: ItemGrupoBinding = ItemGrupoBinding.bind(item)
-        fun render(grupo:Grupo){
+    private var fragment: MapaFragment = MapaFragment()
+
+    inner class GrupoHolder(item: View) : RecyclerView.ViewHolder(item) {
+        var binding: ItemGrupoBinding = ItemGrupoBinding.bind(item)
+        fun render(grupo: Grupo) {
             binding.nombreGrupo.text = grupo.nombre
             binding.descripcionGrupo.text = grupo.tipo
             binding.rolGrupo.text = grupo.rol
-            if (grupo.tipo=="Familia"){
+            if (grupo.tipo == "Familia") {
                 binding.imagenGrupo.setImageResource(R.drawable.ic_familia)
-            }else if (grupo.tipo =="Amigos"){
+            } else if (grupo.tipo == "Amigos") {
                 binding.imagenGrupo.setImageResource(R.drawable.ic_amigos)
-            }else if(grupo.tipo =="Trabajo"){
+            } else if (grupo.tipo == "Trabajo") {
                 binding.imagenGrupo.setImageResource(R.drawable.ic_trabajo)
+            }
+            binding.btnTest.setOnClickListener {
+                Log.d("GruposIds", "${grupo.id}")
+                fragment.idGroup = grupo.id.toString()
             }
         }
     }

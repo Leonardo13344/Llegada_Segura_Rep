@@ -49,6 +49,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var grupo: grupos_join
     private val dbStore = Firebase.firestore
     private lateinit var markers: MutableList<Marker>
+    var idGroup = "1"
 
 
     companion object {
@@ -68,7 +69,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         grupo = grupos_join()
         markers = mutableListOf()
         lastKnownLocation()
-        validateMembers("1")
+        validateMembers(idGroup)
         return binding.root
     }
 
@@ -173,7 +174,6 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
                 this.requireActivity().getSharedPreferences("loginData", Context.MODE_PRIVATE)
             prefs.getString("email", null).toString().replace(".", "!")
         }
-
     }
 
     private fun validate(
