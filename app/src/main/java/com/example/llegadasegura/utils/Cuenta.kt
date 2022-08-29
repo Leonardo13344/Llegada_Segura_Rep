@@ -1,9 +1,12 @@
 package com.example.llegadasegura.utils
+
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -37,7 +40,7 @@ class Cuenta: AppCompatActivity() {
         binding.txtNombre.hint = nombre
         binding.txtApellido.hint = apellido
         binding.txtNumero.hint = telefono
-        cargarImagen(correo)
+        cargarImagenI(correo)
         setContentView(binding.root)
 
 
@@ -49,11 +52,7 @@ class Cuenta: AppCompatActivity() {
                 binding.btnFoto.text = "Confirmar"
             }else{
                 subirImagen(correo)
-                try {
-                    Thread.sleep(1500)
-                }catch (e: InterruptedIOException){
-                    e.printStackTrace()
-                }
+
                 cargarImagen(correo)
                 activarImagen = false
                 binding.btnFoto.text = "Agregar/Cambiar Foto"
@@ -65,7 +64,7 @@ class Cuenta: AppCompatActivity() {
                 activarCasillas(true)
                 binding.btnEditarDatos.text="CONFIRMAR"
                 activarDatos = true
-                Toast.makeText(this,"Ingrese los nuevos datos", Toast.LENGTH_SHORT)
+                Toast.makeText(this,"Ingrese los nuevos datos", Toast.LENGTH_SHORT).show()
             }else{
                 if(binding.txtNombre.text.isNotBlank()&&binding.txtNombre.text.isNotBlank()&&binding.txtNombre.text.isNotBlank()){
                     cambiarDatos(
@@ -107,20 +106,71 @@ class Cuenta: AppCompatActivity() {
     }
 
     private fun cargarImagen(correo:String){
-
+        val storageRef = FirebaseStorage.getInstance().reference.child("images/$correo")
+        val localfile = File.createTempFile("tempImage",".jpg")
+        try {
+            Thread.sleep(4000)
+        }catch (e: InterruptedIOException){
+            e.printStackTrace()
+        }
         val progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Cargando datos...")
         progressDialog.setCancelable(false)
         progressDialog.show()
-        val storageRef = FirebaseStorage.getInstance().reference.child("images/$correo")
-        val localfile = File.createTempFile("tempImage",".jpg")
         storageRef.getFile(localfile).addOnSuccessListener {
             if(progressDialog.isShowing){
                 progressDialog.dismiss()
             }
             rotationMatrix(90f,0f,0f)
             val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
-            binding.imgFoto.setImageBitmap(bitmap)
+            val ei = ExifInterface(localfile.absolutePath)
+            val orientation: Int = ei.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
+            )
+
+            val rotatedBitmap: Bitmap?
+            rotatedBitmap = when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270f)
+                ExifInterface.ORIENTATION_NORMAL -> bitmap
+                else -> bitmap
+            }
+            binding.imgFoto.setImageBitmap(rotatedBitmap)
+
+        }.addOnFailureListener{
+            Toast.makeText(this, "No se pudo cargar la imagen", Toast.LENGTH_LONG).show()
+        }
+    }
+    private fun cargarImagenI(correo:String){
+        val storageRef = FirebaseStorage.getInstance().reference.child("images/$correo")
+        val localfile = File.createTempFile("tempImage",".jpg")
+        val progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Cargando datos...")
+        progressDialog.setCancelable(false)
+        progressDialog.show()
+        storageRef.getFile(localfile).addOnSuccessListener {
+            if(progressDialog.isShowing){
+                progressDialog.dismiss()
+            }
+            rotationMatrix(90f,0f,0f)
+            val bitmap = BitmapFactory.decodeFile(localfile.absolutePath)
+            val ei = ExifInterface(localfile.absolutePath)
+            val orientation: Int = ei.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
+            )
+
+            var rotatedBitmap: Bitmap? = null
+            rotatedBitmap = when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotateImage(bitmap, 90f)
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotateImage(bitmap, 180f)
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotateImage(bitmap, 270f)
+                ExifInterface.ORIENTATION_NORMAL -> bitmap
+                else -> bitmap
+            }
+            binding.imgFoto.setImageBitmap(rotatedBitmap)
 
         }.addOnFailureListener{
             Toast.makeText(this, "No se pudo cargar la imagen", Toast.LENGTH_LONG).show()
@@ -166,5 +216,12 @@ class Cuenta: AppCompatActivity() {
         binding.txtNumero.hint =""
         this.activarDatos = true
     }
-
+    fun rotateImage(source: Bitmap, angle: Float): Bitmap? {
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+        return Bitmap.createBitmap(
+            source, 0, 0, source.width, source.height,
+            matrix, true
+        )
+    }
 }

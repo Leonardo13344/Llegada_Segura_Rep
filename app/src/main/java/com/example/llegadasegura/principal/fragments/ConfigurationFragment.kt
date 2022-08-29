@@ -19,6 +19,7 @@ import com.example.llegadasegura.registro.MainActivity
 import com.example.llegadasegura.utils.AcercaDe
 import com.example.llegadasegura.utils.Cuenta
 import com.example.llegadasegura.utils.TerminosResultActivityInfo
+import com.example.llegadasegura.utils.VersionPremium
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -52,6 +53,9 @@ class ConfigurationFragment : Fragment() {
         }
         binding.btnSoporte.setOnClickListener{
             irAAcercaDe()
+        }
+        binding.btnPremium.setOnClickListener{
+            irVersionPremium()
         }
         return binding.root
     }
@@ -121,5 +125,10 @@ class ConfigurationFragment : Fragment() {
         Log.d("DatosPreviosIntent", "DocumentSnapshot data: ${nombre} ${apellido} ${telefono} ")
         startActivity(intent)
     }
-
+    private fun irVersionPremium(){
+        val intent = Intent(requireContext(), VersionPremium::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
+    }
 }

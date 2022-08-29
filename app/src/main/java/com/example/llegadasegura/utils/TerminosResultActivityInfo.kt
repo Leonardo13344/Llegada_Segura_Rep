@@ -36,9 +36,10 @@ class TerminosResultActivityInfo : AppCompatActivity() {
         }
     }
     fun Regresar(){
-        val intent = Intent(this, PrincipalActivity::class.java )
+       /* val intent = Intent(this, PrincipalActivity::class.java )
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+        startActivity(intent)*/
+        finish()
     }
 }

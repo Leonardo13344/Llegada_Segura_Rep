@@ -49,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ic_cuenta"
-        app:layout_constraintTop_toBottomOf="@+id/btnPayment" />
+        app:layout_constraintTop_toBottomOf="@+id/btnPremium" />
 
     <ImageView
         android:id="@+id/ic_membresia"
@@ -101,7 +101,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ic_membresia" />
 
     <Button
-        android:id="@+id/btnPayment"
+        android:id="@+id/btnPremium"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="302dp"
         android:layout_height="70dp"
