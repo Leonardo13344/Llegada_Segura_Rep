@@ -10,13 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.llegadasegura.Clases.Grupo
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.ItemGrupoBinding
-import com.example.llegadasegura.principal.fragments.GroupsFragment
-import com.example.llegadasegura.principal.fragments.MapaFragment
-import com.example.llegadasegura.utils.MyCallback
-import com.example.llegadasegura.utils.MyCallback2
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 class grupo_adapter(
     val grupo: List<Grupo>

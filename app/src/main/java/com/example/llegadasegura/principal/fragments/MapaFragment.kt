@@ -19,10 +19,8 @@ import androidx.core.content.ContextCompat
 import com.example.llegadasegura.Clases.MapCoor
 import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.FragmentMapaBinding
-import com.example.llegadasegura.grupo.grupos_join
 import com.example.llegadasegura.principal.PrincipalActivity
 import com.example.llegadasegura.utils.MyCallback
-import com.example.llegadasegura.utils.MyCallback2
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
