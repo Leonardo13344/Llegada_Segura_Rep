@@ -44,19 +44,33 @@
         android:text="Continuar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword"
-        app:layout_constraintVertical_bias="0.343" />
+        app:layout_constraintVertical_bias="0.2" />
 
     <Button
         android:id="@+id/btnRecuperarC"
-        android:layout_width="192dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="184dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="161dp"
+        android:layout_height="53dp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="176dp"
         android:text="Recuperar Contraseña"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.873"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView32"
+        style="@style/texto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="76dp"
+        android:text="¿Haz olvidado tu Contraseña?"
+        app:layout_constraintBottom_toTopOf="@+id/btnRecuperarC"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
