@@ -1,5 +1,7 @@
 package com.example.llegadasegura.grupo
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,8 @@ import com.example.llegadasegura.R
 import com.example.llegadasegura.databinding.ItemGrupoBinding
 import com.example.llegadasegura.principal.fragments.GroupsFragment
 import com.example.llegadasegura.principal.fragments.MapaFragment
+import com.example.llegadasegura.utils.MyCallback
+import com.example.llegadasegura.utils.MyCallback2
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -19,7 +23,7 @@ class grupo_adapter(
 ) :
     RecyclerView.Adapter<grupo_adapter.GrupoHolder>() {
 
-    private var fragment: MapaFragment = MapaFragment()
+
 
     inner class GrupoHolder(item: View) : RecyclerView.ViewHolder(item) {
         var binding: ItemGrupoBinding = ItemGrupoBinding.bind(item)
@@ -36,7 +40,11 @@ class grupo_adapter(
             }
             binding.btnTest.setOnClickListener {
                 Log.d("GruposIds", "${grupo.id}")
-                fragment.idGroup = grupo.id.toString()
+                //fragment.idGroup = grupo.id.toString()
+                var ctx: Context = this.itemView.context
+                var editor: SharedPreferences.Editor = ctx.getSharedPreferences("GrupoIds", Context.MODE_PRIVATE).edit()
+                editor.putString("idGrupo",grupo.id.toString())
+                editor.apply()
             }
         }
     }

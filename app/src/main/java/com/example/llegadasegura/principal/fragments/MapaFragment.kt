@@ -3,6 +3,7 @@ package com.example.llegadasegura.principal.fragments
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -21,6 +22,7 @@ import com.example.llegadasegura.databinding.FragmentMapaBinding
 import com.example.llegadasegura.grupo.grupos_join
 import com.example.llegadasegura.principal.PrincipalActivity
 import com.example.llegadasegura.utils.MyCallback
+import com.example.llegadasegura.utils.MyCallback2
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -38,7 +40,7 @@ import com.google.firebase.ktx.Firebase
 
 
 class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
-    GoogleMap.OnMyLocationClickListener {
+    GoogleMap.OnMyLocationClickListener{
     // TODO: Rename and change types of parameters
 
     private lateinit var map: GoogleMap
@@ -46,10 +48,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var db: DatabaseReference
     private lateinit var mapCoor: MapCoor
-    private lateinit var grupo: grupos_join
     private val dbStore = Firebase.firestore
-    private lateinit var markers: MutableList<Marker>
-    var idGroup = "1"
+    //var idGroupDefault = "1"
 
 
     companion object {
@@ -66,11 +66,21 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
         createFragment()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         db = FirebaseDatabase.getInstance().getReference("usuarios")
-        grupo = grupos_join()
-        markers = mutableListOf()
+
         lastKnownLocation()
-        validateMembers(idGroup)
+
+        validateMembers(getIdGroups())
         return binding.root
+    }
+
+    private fun getIdGroups():String{
+        if (!isAdded){
+            return ""
+        }else{
+            val prefs: SharedPreferences = requireContext().getSharedPreferences("GrupoIds", Context.MODE_PRIVATE)
+            return prefs.getString("idGrupo",null).toString()
+        }
+
     }
 
 
@@ -161,7 +171,7 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             override fun onFinish() {
                 Log.e("LocationCount", "Count Down Out")
                 lastKnownLocation()
-                validateMembers("1")
+                validateMembers(getIdGroups())
             }
         }.start()
     }
@@ -217,52 +227,56 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
     }
 
     private fun validateMembers(id: String) {
-        val allMembersStore = dbStore.collection("grupos").document(id).collection("Miembros").get()
-        validate(allMembersStore, db, object : MyCallback {
-            override fun onCallback(value: Boolean, list: MutableList<String>) {
-                if (value) {
-                    allMembersStore.addOnSuccessListener { documents ->
-                        for (user in documents) {
-                            for (u2 in list) {
-                                db.child(u2.replace(".", "!")).get().addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        val snap = task.result
-                                        val lat = snap.child("Latitud")
-                                            .getValue(String::class.java)
-                                        val lang = snap.child("Longitud")
-                                            .getValue(String::class.java)
-                                        Log.d("DataStore", "$lat , $lang")
-                                        val coords = LatLng(
-                                            lat.toString().toDouble(),
-                                            lang.toString().toDouble()
-                                        )
-                                        Log.d(
-                                            "Mails",
-                                            "${user.id} , ${getMail().replace("!", ".")}"
-                                        )
-                                        var listCoords = mutableListOf<LatLng>()
-                                        listCoords.add(coords)
-                                        var m = createMarker(coords)
-                                        object : CountDownTimer(10000, 1000) {
-                                            override fun onTick(p0: Long) {
-                                            }
+        if(id.isEmpty()){
+            return
+        }else{
+            val allMembersStore = dbStore.collection("grupos").document(id).collection("Miembros").get()
+            validate(allMembersStore, db, object : MyCallback {
+                override fun onCallback(value: Boolean, list: MutableList<String>) {
+                    if (value) {
+                        allMembersStore.addOnSuccessListener { documents ->
+                            for (user in documents) {
+                                for (u2 in list) {
+                                    db.child(u2.replace(".", "!")).get().addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            val snap = task.result
+                                            val lat = snap.child("Latitud")
+                                                .getValue(String::class.java)
+                                            val lang = snap.child("Longitud")
+                                                .getValue(String::class.java)
+                                            Log.d("DataStore", "$lat , $lang")
+                                            val coords = LatLng(
+                                                lat.toString().toDouble(),
+                                                lang.toString().toDouble()
+                                            )
+                                            Log.d(
+                                                "Mails",
+                                                "${user.id} , ${getMail().replace("!", ".")}"
+                                            )
+                                            var listCoords = mutableListOf<LatLng>()
+                                            listCoords.add(coords)
+                                            var m = createMarker(coords)
+                                            object : CountDownTimer(10000, 1000) {
+                                                override fun onTick(p0: Long) {
+                                                }
 
-                                            override fun onFinish() {
-                                                m?.remove()
-                                            }
-                                        }.start()
-                                    } else {
-                                        Log.d("DataStore", task.exception!!.message!!)
+                                                override fun onFinish() {
+                                                    m?.remove()
+                                                }
+                                            }.start()
+                                        } else {
+                                            Log.d("DataStore", task.exception!!.message!!)
+                                        }
                                     }
                                 }
                             }
                         }
+                    } else {
+                        return
                     }
-                } else {
-                    return
                 }
-            }
-        })
+            })
+        }
     }
 
 
@@ -370,5 +384,8 @@ class MapaFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButto
             Toast.LENGTH_SHORT
         ).show()
     }
+
+
+
 
 }
