@@ -26,7 +26,7 @@ class TerminosResultActivityInfo : AppCompatActivity() {
                 "4.  La aplicación móvil en su versión inicial es gratuita y dispone de los servicios de ubicación y de generación de grupos de seguimiento, en una versión posterior se propone implementar otras funcionalidades como: un botón de emergencia y un sistema de alerta en caso de siniestros. \n \n" +
                 "5.  El titular de la aplicación no se responsabiliza por el daño total o parcial de su dispositivo del hardware de su dispositivo móvil. \n \n" +
                 "6.  El aplicativo móvil no se responsabiliza de la mala utilización de este, se propone únicamente como una herramienta para la geolocalización de las personas de su círculo social/familiar cercano. \n \n" +
-                "7.  Todos los derechos de propiedad intelectual e industrial corresponden al grupo de trabajo de Dispositivos móviles de la carrera de Ciencias de la Computación de la Universidad Central del Ecuador y el usuario del aplicativo se compromete a respetarlos.\n \n"
+                "7.  Todos los derechos de propiedad intelectual e industrial corresponden al grupo de trabajo de Taller 1 de la carrera de Ciencias de la Computación de la Universidad Central del Ecuador y el usuario del aplicativo se compromete a respetarlos.\n \n"
 
 
 

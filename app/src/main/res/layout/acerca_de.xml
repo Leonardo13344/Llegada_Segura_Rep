@@ -121,9 +121,9 @@
         style="@style/texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="16dp"
-        android:text="TUTOR - Dispositivos Moviles"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="12dp"
+        android:text="TUTOR - Taller 1"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView23" />
@@ -133,9 +133,9 @@
         style="@style/texto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginTop="4dp"
-        android:text="Ing. Bayron Torres"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="12dp"
+        android:text="Mgtr. Karla Avila"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView29" />
 
